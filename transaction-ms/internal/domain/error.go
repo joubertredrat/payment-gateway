@@ -1,8 +1,14 @@
 package domain
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+)
+
+var (
+	ErrCreditCardTransactionRepositoryHouston = errors.New("Houston, we have unknown error into credit card transaction repository")
+	ErrTransactionStatusRepositoryHouston     = errors.New("Houston, we have unknown error into transaction status repository")
 )
 
 type ErrInvalidCreditCardNumber struct {
