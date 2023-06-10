@@ -126,6 +126,16 @@ func NewAuthorizationResponse(status string) (AuthorizationResponse, error) {
 	}, nil
 }
 
+func (a AuthorizationResponse) GetTransactionStatus() string {
+	if a.Status == AUTHORIZATION_STATUS_AUTHORIZED {
+		return TRANSACTION_STATUS_AUTHORIZED
+	}
+	if a.Status == AUTHORIZATION_STATUS_DECLINED {
+		return TRANSACTION_STATUS_REFUSED
+	}
+	return ""
+}
+
 func IsValidInstallments(i uint) bool {
 	return i >= INSTALLMENTS_MIN && i <= INSTALLMENTS_MAX
 }
