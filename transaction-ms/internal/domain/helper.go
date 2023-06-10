@@ -3,6 +3,8 @@ package domain
 import (
 	"fmt"
 	"regexp"
+
+	"github.com/oklog/ulid/v2"
 )
 
 const (
@@ -20,4 +22,8 @@ func SanitizeCreditCardNumber(c string) (string, error) {
 	}
 
 	return fmt.Sprintf("%sXXXXXX%s", string(c[:6]), string(c[12:])), nil
+}
+
+func TransactionID() string {
+	return ulid.Make().String()
 }

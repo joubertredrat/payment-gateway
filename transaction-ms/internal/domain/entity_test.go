@@ -41,7 +41,7 @@ func TestAmountBRL(t *testing.T) {
 	}
 }
 
-func TestNewCreditCardTransction(t *testing.T) {
+func TestNewCreditCardTransaction(t *testing.T) {
 	tests := []struct {
 		name                         string
 		transactionID                string
@@ -49,8 +49,8 @@ func TestNewCreditCardTransction(t *testing.T) {
 		amount                       uint
 		installments                 uint
 		description                  string
-		transctionStatus             []domain.TransctionStatus
-		creditCardTransctionExpected domain.CreditCardTransction
+		transctionStatus             []domain.TransactionStatus
+		creditCardTransctionExpected domain.CreditCardTransaction
 		errExpected                  error
 	}{
 		{
@@ -60,16 +60,16 @@ func TestNewCreditCardTransction(t *testing.T) {
 			amount:           1250,
 			installments:     2,
 			description:      "usb cable",
-			transctionStatus: []domain.TransctionStatus{},
-			creditCardTransctionExpected: domain.CreditCardTransction{
+			transctionStatus: []domain.TransactionStatus{},
+			creditCardTransctionExpected: domain.CreditCardTransaction{
 				TransactionID: "01H2K6VSVKJA8GDC13MK28P03M",
 				CardNumber:    "513073XXXXXX7489",
 				Amount: domain.Amount{
 					Value: 1250,
 				},
-				Installments:     2,
-				Description:      "usb cable",
-				TransctionStatus: []domain.TransctionStatus{},
+				Installments:      2,
+				Description:       "usb cable",
+				TransactionStatus: []domain.TransactionStatus{},
 			},
 			errExpected: nil,
 		},
@@ -80,8 +80,8 @@ func TestNewCreditCardTransction(t *testing.T) {
 			amount:                       1250,
 			installments:                 15,
 			description:                  "usb cable",
-			transctionStatus:             []domain.TransctionStatus{},
-			creditCardTransctionExpected: domain.CreditCardTransction{},
+			transctionStatus:             []domain.TransactionStatus{},
+			creditCardTransctionExpected: domain.CreditCardTransaction{},
 			errExpected:                  domain.NewErrCreditCardTransctionInstallments(15),
 		},
 		{
@@ -91,15 +91,15 @@ func TestNewCreditCardTransction(t *testing.T) {
 			amount:                       1250,
 			installments:                 2,
 			description:                  "usb cable",
-			transctionStatus:             []domain.TransctionStatus{},
-			creditCardTransctionExpected: domain.CreditCardTransction{},
+			transctionStatus:             []domain.TransactionStatus{},
+			creditCardTransctionExpected: domain.CreditCardTransaction{},
 			errExpected:                  domain.NewErrInvalidCreditCardNumber("513073130426"),
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			creditCardTransctionGot, errGot := domain.NewCreditCardTransction(
+			creditCardTransctionGot, errGot := domain.NewCreditCardTransaction(
 				test.transactionID,
 				test.cardNumber,
 				test.amount,

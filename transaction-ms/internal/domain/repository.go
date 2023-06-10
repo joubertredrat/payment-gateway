@@ -5,14 +5,14 @@ type PaginationCriteria struct {
 	ItemsPerPage uint
 }
 
-type CreditCardTransctionRepository interface {
-	Create(c CreditCardTransction) (CreditCardTransction, error)
-	GetByID(ID string) (CreditCardTransction, error)
-	GetList(p PaginationCriteria) ([]CreditCardTransction, error)
+type CreditCardTransactionRepository interface {
+	Create(c CreditCardTransaction) (CreditCardTransaction, error)
+	GetByID(ID string) (CreditCardTransaction, error)
+	GetList(p PaginationCriteria) ([]CreditCardTransaction, error)
 }
 
-type TransctionStatusRepository interface {
-	Create(t TransctionStatus) (TransctionStatus, error)
-	GetByID(ID string) (TransctionStatus, error)
-	GetByCreditCardTransctionID(ID string) ([]TransctionStatus, error)
+type TransactionStatusRepository interface {
+	Create(t TransactionStatus) (TransactionStatus, error)
+	GetByID(ID string) (TransactionStatus, error)
+	GetByCreditCardTransctionID(ID string) ([]TransactionStatus, error)
 }

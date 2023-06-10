@@ -27,58 +27,58 @@ func (a Amount) BRL() string {
 	return money.New(int64(a.Value), money.BRL).Display()
 }
 
-type CreditCardTransction struct {
-	ID               *uint
-	TransactionID    string
-	CardNumber       string
-	Amount           Amount
-	Installments     uint
-	Description      string
-	TransctionStatus []TransctionStatus
-	CreatedAt        *time.Time
-	UpdatedAt        *time.Time
+type CreditCardTransaction struct {
+	ID                uint
+	TransactionID     string
+	CardNumber        string
+	Amount            Amount
+	Installments      uint
+	Description       string
+	TransactionStatus []TransactionStatus
+	CreatedAt         *time.Time
+	UpdatedAt         *time.Time
 }
 
-func NewCreditCardTransction(
+func NewCreditCardTransaction(
 	transactionID, cardNumber string,
 	amount uint,
 	installments uint,
 	description string,
-	transctionStatus []TransctionStatus,
-) (CreditCardTransction, error) {
+	transactionStatus []TransactionStatus,
+) (CreditCardTransaction, error) {
 	if !IsValidInstallments(installments) {
-		return CreditCardTransction{}, NewErrCreditCardTransctionInstallments(installments)
+		return CreditCardTransaction{}, NewErrCreditCardTransctionInstallments(installments)
 	}
 	cardNumberSanitized, err := SanitizeCreditCardNumber(cardNumber)
 	if err != nil {
-		return CreditCardTransction{}, err
+		return CreditCardTransaction{}, err
 	}
 
-	return CreditCardTransction{
+	return CreditCardTransaction{
 		TransactionID: transactionID,
 		CardNumber:    cardNumberSanitized,
 		Amount: Amount{
 			Value: amount,
 		},
-		Installments:     installments,
-		Description:      description,
-		TransctionStatus: transctionStatus,
+		Installments:      installments,
+		Description:       description,
+		TransactionStatus: transactionStatus,
 	}, nil
 }
 
-type TransctionStatus struct {
-	ID                     *uint
+type TransactionStatus struct {
+	ID                     uint
 	CreditCardTransctionID uint
 	Status                 string
 	CreatedAt              *time.Time
 }
 
-func NewTransctionStatus(creditCardTransctionID uint, status string) (TransctionStatus, error) {
+func NewTransactionStatus(creditCardTransctionID uint, status string) (TransactionStatus, error) {
 	if !IsValidTransactionStatus(status) {
-		return TransctionStatus{}, NewErrTransctionStatusInvalid(status)
+		return TransactionStatus{}, NewErrTransctionStatusInvalid(status)
 	}
 
-	return TransctionStatus{
+	return TransactionStatus{
 		CreditCardTransctionID: creditCardTransctionID,
 		Status:                 status,
 	}, nil
