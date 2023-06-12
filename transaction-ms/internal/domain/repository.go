@@ -15,5 +15,5 @@ type CreditCardTransactionRepository interface {
 type TransactionStatusRepository interface {
 	Create(t TransactionStatus) (TransactionStatus, error)
 	GetByID(ID string) (TransactionStatus, error)
-	GetByCreditCardTransctionID(TransactionID string) ([]TransactionStatus, error)
+	GetByCreditCardTransactionID(TransactionID string) ([]TransactionStatus, error)
 }

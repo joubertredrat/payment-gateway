@@ -4,7 +4,7 @@ import (
 	"joubertredrat/transaction-ms/internal/domain"
 )
 
-type UsecaseCreateCreditCardTransction struct {
+type UsecaseCreateCreditCardTransaction struct {
 	logger                          Logger
 	creditCardTransactionRepository domain.CreditCardTransactionRepository
 	transactionStatusRepository     domain.TransactionStatusRepository
@@ -12,14 +12,14 @@ type UsecaseCreateCreditCardTransction struct {
 	dispatcher                      Dispatcher
 }
 
-func NewUsecaseCreateCreditCardTransction(
+func NewUsecaseCreateCreditCardTransaction(
 	logger Logger,
 	creditCardTransactionRepository domain.CreditCardTransactionRepository,
 	transactionStatusRepository domain.TransactionStatusRepository,
 	authorizationService domain.AuthorizationService,
 	dispatcher Dispatcher,
-) UsecaseCreateCreditCardTransction {
-	return UsecaseCreateCreditCardTransction{
+) UsecaseCreateCreditCardTransaction {
+	return UsecaseCreateCreditCardTransaction{
 		logger:                          logger,
 		creditCardTransactionRepository: creditCardTransactionRepository,
 		transactionStatusRepository:     transactionStatusRepository,
@@ -28,7 +28,7 @@ func NewUsecaseCreateCreditCardTransction(
 	}
 }
 
-func (u UsecaseCreateCreditCardTransction) Execute(input CreateCreditCardTransctionInput) (domain.CreditCardTransaction, error) {
+func (u UsecaseCreateCreditCardTransaction) Execute(input CreateCreditCardTransactionInput) (domain.CreditCardTransaction, error) {
 	transaction, err := CreateCreditCardTransactionFromInput(input)
 	if err != nil {
 		u.logger.Error(err)
@@ -43,13 +43,13 @@ func (u UsecaseCreateCreditCardTransction) Execute(input CreateCreditCardTransct
 	transactionCreated, err := u.creditCardTransactionRepository.Create(transaction)
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransactionHouston
 	}
 
 	statusCreated, err := u.appendStatus(transactionCreated, domain.TRANSACTION_STATUS_CREATED)
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransactionHouston
 	}
 	transactionCreated.TransactionStatus = append(transactionCreated.TransactionStatus, statusCreated)
 
@@ -57,23 +57,23 @@ func (u UsecaseCreateCreditCardTransction) Execute(input CreateCreditCardTransct
 	if err != nil {
 		u.logger.Error(err)
 		u.appendErrorStatus(transactionCreated, domain.TRANSACTION_STATUS_ERROR_AUTHORIZATION)
-		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransactionHouston
 	}
 
 	statusAuthorization, err := u.appendStatus(transactionCreated, authorizationResponse.GetTransactionStatus())
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransactionHouston
 	}
 	transactionCreated.TransactionStatus = append(transactionCreated.TransactionStatus, statusAuthorization)
 
-	if err := u.dispatcher.CreditCardTransctionCreated(transactionCreated); err != nil {
+	if err := u.dispatcher.CreditCardTransactionCreated(transactionCreated); err != nil {
 		u.logger.Error(err)
 	}
 	return transactionCreated, nil
 }
 
-func (u UsecaseCreateCreditCardTransction) appendStatus(t domain.CreditCardTransaction, status string) (domain.TransactionStatus, error) {
+func (u UsecaseCreateCreditCardTransaction) appendStatus(t domain.CreditCardTransaction, status string) (domain.TransactionStatus, error) {
 	statusCreated, err := domain.NewTransactionStatus(t.ID, status)
 	if err != nil {
 		return domain.TransactionStatus{}, err
@@ -82,27 +82,27 @@ func (u UsecaseCreateCreditCardTransction) appendStatus(t domain.CreditCardTrans
 	return u.transactionStatusRepository.Create(statusCreated)
 }
 
-func (u UsecaseCreateCreditCardTransction) appendErrorStatus(t domain.CreditCardTransaction, status string) {
+func (u UsecaseCreateCreditCardTransaction) appendErrorStatus(t domain.CreditCardTransaction, status string) {
 	_, err := u.appendStatus(t, status)
 	if err != nil {
 		u.logger.Error(err)
 	}
 }
 
-type UsecaseEditCreditCardTransction struct {
+type UsecaseEditCreditCardTransaction struct {
 	logger                          Logger
 	creditCardTransactionRepository domain.CreditCardTransactionRepository
 	transactionStatusRepository     domain.TransactionStatusRepository
 	dispatcher                      Dispatcher
 }
 
-func NewUsecaseEditCreditCardTransction(
+func NewUsecaseEditCreditCardTransaction(
 	logger Logger,
 	creditCardTransactionRepository domain.CreditCardTransactionRepository,
 	transactionStatusRepository domain.TransactionStatusRepository,
 	dispatcher Dispatcher,
-) UsecaseEditCreditCardTransction {
-	return UsecaseEditCreditCardTransction{
+) UsecaseEditCreditCardTransaction {
+	return UsecaseEditCreditCardTransaction{
 		logger:                          logger,
 		creditCardTransactionRepository: creditCardTransactionRepository,
 		transactionStatusRepository:     transactionStatusRepository,
@@ -110,7 +110,7 @@ func NewUsecaseEditCreditCardTransction(
 	}
 }
 
-func (u UsecaseEditCreditCardTransction) Execute(input EditCreditCardTransctionInput) (domain.CreditCardTransaction, error) {
+func (u UsecaseEditCreditCardTransaction) Execute(input EditCreditCardTransactionInput) (domain.CreditCardTransaction, error) {
 	transactionFound, err := u.creditCardTransactionRepository.GetByTransactionID(input.TransactionID)
 	if err != nil {
 		u.logger.Error(err)
@@ -118,24 +118,24 @@ func (u UsecaseEditCreditCardTransction) Execute(input EditCreditCardTransctionI
 			return domain.CreditCardTransaction{}, err
 		}
 
-		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransactionHouston
 	}
 
 	transactionFound.Description = input.Description
 	transactionEdited, err := u.creditCardTransactionRepository.Update(transactionFound)
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransactionHouston
 	}
 
-	status, err := u.transactionStatusRepository.GetByCreditCardTransctionID(transactionEdited.TransactionID)
+	status, err := u.transactionStatusRepository.GetByCreditCardTransactionID(transactionEdited.TransactionID)
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransactionHouston
 	}
 	transactionEdited.TransactionStatus = status
 
-	if err := u.dispatcher.CreditCardTransctionEdited(transactionEdited); err != nil {
+	if err := u.dispatcher.CreditCardTransactionEdited(transactionEdited); err != nil {
 		u.logger.Error(err)
 	}
 	return transactionEdited, nil

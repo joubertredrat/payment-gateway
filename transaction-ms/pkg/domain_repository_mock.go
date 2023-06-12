@@ -132,19 +132,19 @@ func (mr *MockTransactionStatusRepositoryMockRecorder) Create(t interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockTransactionStatusRepository)(nil).Create), t)
 }
 
-// GetByCreditCardTransctionID mocks base method.
-func (m *MockTransactionStatusRepository) GetByCreditCardTransctionID(TransactionID string) ([]domain.TransactionStatus, error) {
+// GetByCreditCardTransactionID mocks base method.
+func (m *MockTransactionStatusRepository) GetByCreditCardTransactionID(TransactionID string) ([]domain.TransactionStatus, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByCreditCardTransctionID", TransactionID)
+	ret := m.ctrl.Call(m, "GetByCreditCardTransactionID", TransactionID)
 	ret0, _ := ret[0].([]domain.TransactionStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetByCreditCardTransctionID indicates an expected call of GetByCreditCardTransctionID.
-func (mr *MockTransactionStatusRepositoryMockRecorder) GetByCreditCardTransctionID(TransactionID interface{}) *gomock.Call {
+// GetByCreditCardTransactionID indicates an expected call of GetByCreditCardTransactionID.
+func (mr *MockTransactionStatusRepositoryMockRecorder) GetByCreditCardTransactionID(TransactionID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByCreditCardTransctionID", reflect.TypeOf((*MockTransactionStatusRepository)(nil).GetByCreditCardTransctionID), TransactionID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByCreditCardTransactionID", reflect.TypeOf((*MockTransactionStatusRepository)(nil).GetByCreditCardTransactionID), TransactionID)
 }
 
 // GetByID mocks base method.

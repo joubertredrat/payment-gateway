@@ -26,7 +26,7 @@ func TestErrInvalidCreditCardNumber(t *testing.T) {
 	assert.Equal(t, errExpected, errGot.Error())
 }
 
-func TestErrCreditCardTransctionInstallments(t *testing.T) {
+func TestErrCreditCardTransactionInstallments(t *testing.T) {
 	invalidInstallments := uint(16)
 	errExpected := fmt.Sprintf(
 		"Invalid installments, expected between [ %d ] and [ %d ], got [ %d ]",
@@ -34,19 +34,19 @@ func TestErrCreditCardTransctionInstallments(t *testing.T) {
 		domain.INSTALLMENTS_MAX,
 		invalidInstallments,
 	)
-	errGot := domain.NewErrCreditCardTransctionInstallments(invalidInstallments)
+	errGot := domain.NewErrCreditCardTransactionInstallments(invalidInstallments)
 
 	assert.Equal(t, errExpected, errGot.Error())
 }
 
-func TestErrTransctionStatusInvalid(t *testing.T) {
+func TestErrTransactionStatusInvalid(t *testing.T) {
 	invalidStatus := "done"
 	errExpected := fmt.Sprintf(
-		"Invalid transction status, expected one of [ %s ], got [ %s ]",
+		"Invalid transaction status, expected one of [ %s ], got [ %s ]",
 		strings.Join(domain.GetTransactionStatusAvailable(), ", "),
 		invalidStatus,
 	)
-	errGot := domain.NewErrTransctionStatusInvalid(invalidStatus)
+	errGot := domain.NewErrTransactionStatusInvalid(invalidStatus)
 
 	assert.Equal(t, errExpected, errGot.Error())
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func TestCreateCreditCardTransactionFromInput(t *testing.T) {
-	input := application.CreateCreditCardTransctionInput{
+	input := application.CreateCreditCardTransactionInput{
 		HolderName:   "John Doe",
 		CardNumber:   "5130731304267489",
 		CVV:          "456",
@@ -36,7 +36,7 @@ func TestCreateCreditCardTransactionFromInput(t *testing.T) {
 }
 
 func TestCreateAuthorizationRequestFromInput(t *testing.T) {
-	input := application.CreateCreditCardTransctionInput{
+	input := application.CreateCreditCardTransactionInput{
 		HolderName:   "John Doe",
 		CardNumber:   "5130731304267489",
 		CVV:          "456",

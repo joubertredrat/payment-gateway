@@ -4,7 +4,7 @@ import (
 	"joubertredrat/transaction-ms/internal/domain"
 )
 
-func CreateCreditCardTransactionFromInput(input CreateCreditCardTransctionInput) (domain.CreditCardTransaction, error) {
+func CreateCreditCardTransactionFromInput(input CreateCreditCardTransactionInput) (domain.CreditCardTransaction, error) {
 	return domain.NewCreditCardTransaction(
 		domain.TransactionID(),
 		input.CardNumber,
@@ -15,7 +15,7 @@ func CreateCreditCardTransactionFromInput(input CreateCreditCardTransctionInput)
 	)
 }
 
-func CreateAuthorizationRequestFromInput(input CreateCreditCardTransctionInput) (domain.AuthorizationRequest, error) {
+func CreateAuthorizationRequestFromInput(input CreateCreditCardTransactionInput) (domain.AuthorizationRequest, error) {
 	return domain.NewAuthorizationRequest(
 		input.HolderName,
 		input.CardNumber,

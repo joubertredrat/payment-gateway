@@ -47,7 +47,7 @@ func NewCreditCardTransaction(
 	transactionStatus []TransactionStatus,
 ) (CreditCardTransaction, error) {
 	if !IsValidInstallments(installments) {
-		return CreditCardTransaction{}, NewErrCreditCardTransctionInstallments(installments)
+		return CreditCardTransaction{}, NewErrCreditCardTransactionInstallments(installments)
 	}
 	cardNumberSanitized, err := SanitizeCreditCardNumber(cardNumber)
 	if err != nil {
@@ -67,20 +67,20 @@ func NewCreditCardTransaction(
 }
 
 type TransactionStatus struct {
-	ID                     uint
-	CreditCardTransctionID uint
-	Status                 string
-	CreatedAt              *time.Time
+	ID                      uint
+	CreditCardTransactionID uint
+	Status                  string
+	CreatedAt               *time.Time
 }
 
-func NewTransactionStatus(creditCardTransctionID uint, status string) (TransactionStatus, error) {
+func NewTransactionStatus(creditCardTransactionID uint, status string) (TransactionStatus, error) {
 	if !IsValidTransactionStatus(status) {
-		return TransactionStatus{}, NewErrTransctionStatusInvalid(status)
+		return TransactionStatus{}, NewErrTransactionStatusInvalid(status)
 	}
 
 	return TransactionStatus{
-		CreditCardTransctionID: creditCardTransctionID,
-		Status:                 status,
+		CreditCardTransactionID: creditCardTransactionID,
+		Status:                  status,
 	}, nil
 }
 

@@ -34,30 +34,30 @@ func (m *MockDispatcher) EXPECT() *MockDispatcherMockRecorder {
 	return m.recorder
 }
 
-// CreditCardTransctionCreated mocks base method.
-func (m *MockDispatcher) CreditCardTransctionCreated(arg0 domain.CreditCardTransaction) error {
+// CreditCardTransactionCreated mocks base method.
+func (m *MockDispatcher) CreditCardTransactionCreated(arg0 domain.CreditCardTransaction) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreditCardTransctionCreated", arg0)
+	ret := m.ctrl.Call(m, "CreditCardTransactionCreated", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreditCardTransctionCreated indicates an expected call of CreditCardTransctionCreated.
-func (mr *MockDispatcherMockRecorder) CreditCardTransctionCreated(arg0 interface{}) *gomock.Call {
+// CreditCardTransactionCreated indicates an expected call of CreditCardTransactionCreated.
+func (mr *MockDispatcherMockRecorder) CreditCardTransactionCreated(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransctionCreated", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransctionCreated), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionCreated", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionCreated), arg0)
 }
 
-// CreditCardTransctionEdited mocks base method.
-func (m *MockDispatcher) CreditCardTransctionEdited(arg0 domain.CreditCardTransaction) error {
+// CreditCardTransactionEdited mocks base method.
+func (m *MockDispatcher) CreditCardTransactionEdited(arg0 domain.CreditCardTransaction) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreditCardTransctionEdited", arg0)
+	ret := m.ctrl.Call(m, "CreditCardTransactionEdited", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreditCardTransctionEdited indicates an expected call of CreditCardTransctionEdited.
-func (mr *MockDispatcherMockRecorder) CreditCardTransctionEdited(arg0 interface{}) *gomock.Call {
+// CreditCardTransactionEdited indicates an expected call of CreditCardTransactionEdited.
+func (mr *MockDispatcherMockRecorder) CreditCardTransactionEdited(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransctionEdited", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransctionEdited), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionEdited", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionEdited), arg0)
 }

@@ -42,17 +42,17 @@ func (e ErrInvalidCreditCardNumber) Error() string {
 	return fmt.Sprintf("Invalid credit card number [ %s ]", e.number)
 }
 
-type ErrCreditCardTransctionInstallments struct {
+type ErrCreditCardTransactionInstallments struct {
 	installments uint
 }
 
-func NewErrCreditCardTransctionInstallments(installments uint) ErrCreditCardTransctionInstallments {
-	return ErrCreditCardTransctionInstallments{
+func NewErrCreditCardTransactionInstallments(installments uint) ErrCreditCardTransactionInstallments {
+	return ErrCreditCardTransactionInstallments{
 		installments: installments,
 	}
 }
 
-func (e ErrCreditCardTransctionInstallments) Error() string {
+func (e ErrCreditCardTransactionInstallments) Error() string {
 	return fmt.Sprintf(
 		"Invalid installments, expected between [ %d ] and [ %d ], got [ %d ]",
 		INSTALLMENTS_MIN,
@@ -61,19 +61,19 @@ func (e ErrCreditCardTransctionInstallments) Error() string {
 	)
 }
 
-type ErrTransctionStatusInvalid struct {
+type ErrTransactionStatusInvalid struct {
 	status string
 }
 
-func NewErrTransctionStatusInvalid(status string) ErrTransctionStatusInvalid {
-	return ErrTransctionStatusInvalid{
+func NewErrTransactionStatusInvalid(status string) ErrTransactionStatusInvalid {
+	return ErrTransactionStatusInvalid{
 		status: status,
 	}
 }
 
-func (e ErrTransctionStatusInvalid) Error() string {
+func (e ErrTransactionStatusInvalid) Error() string {
 	return fmt.Sprintf(
-		"Invalid transction status, expected one of [ %s ], got [ %s ]",
+		"Invalid transaction status, expected one of [ %s ], got [ %s ]",
 		strings.Join(GetTransactionStatusAvailable(), ", "),
 		e.status,
 	)

@@ -2,7 +2,7 @@ package application
 
 import "time"
 
-type CreateCreditCardTransctionInput struct {
+type CreateCreditCardTransactionInput struct {
 	HolderName   string
 	CardNumber   string
 	CVV          string
@@ -12,7 +12,7 @@ type CreateCreditCardTransctionInput struct {
 	Description  string
 }
 
-type EditCreditCardTransctionInput struct {
+type EditCreditCardTransactionInput struct {
 	TransactionID string
 	Description   string
 }
