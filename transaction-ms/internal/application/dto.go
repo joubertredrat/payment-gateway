@@ -11,3 +11,8 @@ type CreateCreditCardTransctionInput struct {
 	Installments uint
 	Description  string
 }
+
+type EditCreditCardTransctionInput struct {
+	TransactionID string
+	Description   string
+}

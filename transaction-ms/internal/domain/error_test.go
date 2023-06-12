@@ -9,6 +9,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestErrCreditCardTransactionNotFound(t *testing.T) {
+	invalidCriteria := "TransactionID"
+	invalidValue := "01H2RFARETAMR3G3HTZCDPFZ16"
+	errExpected := fmt.Sprintf("Credit card transaction not found by criteria [ %s ] and value [ %s ]", invalidCriteria, invalidValue)
+	errGot := domain.NewErrCreditCardTransactionNotFound(invalidCriteria, invalidValue)
+
+	assert.Equal(t, errExpected, errGot.Error())
+}
+
 func TestErrInvalidCreditCardNumber(t *testing.T) {
 	invalidNumber := "123456"
 	errExpected := fmt.Sprintf("Invalid credit card number [ %s ]", invalidNumber)

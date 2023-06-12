@@ -88,3 +88,55 @@ func (u UsecaseCreateCreditCardTransction) appendErrorStatus(t domain.CreditCard
 		u.logger.Error(err)
 	}
 }
+
+type UsecaseEditCreditCardTransction struct {
+	logger                          Logger
+	creditCardTransactionRepository domain.CreditCardTransactionRepository
+	transactionStatusRepository     domain.TransactionStatusRepository
+	dispatcher                      Dispatcher
+}
+
+func NewUsecaseEditCreditCardTransction(
+	logger Logger,
+	creditCardTransactionRepository domain.CreditCardTransactionRepository,
+	transactionStatusRepository domain.TransactionStatusRepository,
+	dispatcher Dispatcher,
+) UsecaseEditCreditCardTransction {
+	return UsecaseEditCreditCardTransction{
+		logger:                          logger,
+		creditCardTransactionRepository: creditCardTransactionRepository,
+		transactionStatusRepository:     transactionStatusRepository,
+		dispatcher:                      dispatcher,
+	}
+}
+
+func (u UsecaseEditCreditCardTransction) Execute(input EditCreditCardTransctionInput) (domain.CreditCardTransaction, error) {
+	transactionFound, err := u.creditCardTransactionRepository.GetByTransactionID(input.TransactionID)
+	if err != nil {
+		u.logger.Error(err)
+		if _, ok := err.(domain.ErrCreditCardTransactionNotFound); ok {
+			return domain.CreditCardTransaction{}, err
+		}
+
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+	}
+
+	transactionFound.Description = input.Description
+	transactionEdited, err := u.creditCardTransactionRepository.Update(transactionFound)
+	if err != nil {
+		u.logger.Error(err)
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+	}
+
+	status, err := u.transactionStatusRepository.GetByCreditCardTransctionID(transactionEdited.TransactionID)
+	if err != nil {
+		u.logger.Error(err)
+		return domain.CreditCardTransaction{}, ErrUsecaseEditCreditCardTransctionHouston
+	}
+	transactionEdited.TransactionStatus = status
+
+	if err := u.dispatcher.CreditCardTransctionEdited(transactionEdited); err != nil {
+		u.logger.Error(err)
+	}
+	return transactionEdited, nil
+}

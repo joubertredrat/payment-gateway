@@ -4,4 +4,5 @@ import "joubertredrat/transaction-ms/internal/domain"
 
 type Dispatcher interface {
 	CreditCardTransctionCreated(domain.CreditCardTransaction) error
+	CreditCardTransctionEdited(domain.CreditCardTransaction) error
 }
