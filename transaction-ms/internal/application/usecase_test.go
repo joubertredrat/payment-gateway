@@ -199,7 +199,8 @@ func TestUsecaseCreateCreditCardTransction(t *testing.T) {
 				Installments: 2,
 				Description:  "usb cable",
 			},
-			errExpected: application.ErrUsecaseCreateCreditCardTransctionHouston,
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseCreateCreditCardTransctionHouston,
 		},
 		{
 			name: "test usecase create credit card transction with houston error from first create on transaction status repository",
@@ -255,7 +256,353 @@ func TestUsecaseCreateCreditCardTransction(t *testing.T) {
 				Installments: 2,
 				Description:  "usb cable",
 			},
-			errExpected: application.ErrUsecaseCreateCreditCardTransctionHouston,
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseCreateCreditCardTransctionHouston,
+		},
+		{
+			name: "test usecase create credit card transction with houston error from authorization service",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     10,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					}, nil).
+					Times(1)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     11,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_ERROR_AUTHORIZATION,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			authorizationServiceDependency: func(ctrl *gomock.Controller) domain.AuthorizationService {
+				service := pkg.NewMockAuthorizationService(ctrl)
+				service.
+					EXPECT().
+					Handle(gomock.AssignableToTypeOf(domain.AuthorizationRequest{})).
+					Return(domain.AuthorizationResponse{}, domain.ErrAuthorizationServiceHouston).
+					Times(1)
+
+				return service
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.CreateCreditCardTransctionInput{
+				HolderName:   "John Doe",
+				CardNumber:   "5130731304267489",
+				CVV:          "456",
+				ExpireDate:   *pkg.TimeFromCanonical("2025-05-01 00:00:00"),
+				Amount:       1250,
+				Installments: 2,
+				Description:  "usb cable",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseCreateCreditCardTransctionHouston,
+		},
+		{
+			name: "test usecase create credit card transction with houston error from create error status on transaction status repository",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(2)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     10,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					}, nil).
+					Times(1)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{}, domain.ErrTransactionStatusRepositoryHouston).
+					Times(1)
+
+				return repository
+			},
+			authorizationServiceDependency: func(ctrl *gomock.Controller) domain.AuthorizationService {
+				service := pkg.NewMockAuthorizationService(ctrl)
+				service.
+					EXPECT().
+					Handle(gomock.AssignableToTypeOf(domain.AuthorizationRequest{})).
+					Return(domain.AuthorizationResponse{}, domain.ErrAuthorizationServiceHouston).
+					Times(1)
+
+				return service
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.CreateCreditCardTransctionInput{
+				HolderName:   "John Doe",
+				CardNumber:   "5130731304267489",
+				CVV:          "456",
+				ExpireDate:   *pkg.TimeFromCanonical("2025-05-01 00:00:00"),
+				Amount:       1250,
+				Installments: 2,
+				Description:  "usb cable",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseCreateCreditCardTransctionHouston,
+		},
+		{
+			name: "test usecase create credit card transction with houston error from second create on transaction status repository",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     10,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					}, nil).
+					Times(1)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{}, domain.ErrTransactionStatusRepositoryHouston).
+					Times(1)
+
+				return repository
+			},
+			authorizationServiceDependency: func(ctrl *gomock.Controller) domain.AuthorizationService {
+				service := pkg.NewMockAuthorizationService(ctrl)
+				service.
+					EXPECT().
+					Handle(gomock.AssignableToTypeOf(domain.AuthorizationRequest{})).
+					Return(domain.AuthorizationResponse{
+						Status: domain.AUTHORIZATION_STATUS_AUTHORIZED,
+					}, nil).
+					Times(1)
+
+				return service
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.CreateCreditCardTransctionInput{
+				HolderName:   "John Doe",
+				CardNumber:   "5130731304267489",
+				CVV:          "456",
+				ExpireDate:   *pkg.TimeFromCanonical("2025-05-01 00:00:00"),
+				Amount:       1250,
+				Installments: 2,
+				Description:  "usb cable",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseCreateCreditCardTransctionHouston,
+		},
+		{
+			name: "test usecase create credit card transction with houston error on dispatch created transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     10,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					}, nil).
+					Times(1)
+
+				repository.
+					EXPECT().
+					Create(gomock.AssignableToTypeOf(domain.TransactionStatus{})).
+					Return(domain.TransactionStatus{
+						ID:                     11,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_AUTHORIZED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			authorizationServiceDependency: func(ctrl *gomock.Controller) domain.AuthorizationService {
+				service := pkg.NewMockAuthorizationService(ctrl)
+				service.
+					EXPECT().
+					Handle(gomock.AssignableToTypeOf(domain.AuthorizationRequest{})).
+					Return(domain.AuthorizationResponse{
+						Status: domain.AUTHORIZATION_STATUS_AUTHORIZED,
+					}, nil).
+					Times(1)
+
+				return service
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				dispatcher := pkg.NewMockDispatcher(ctrl)
+				dispatcher.
+					EXPECT().
+					CreditCardTransctionCreated(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(application.ErrDispatcherHouston).
+					Times(1)
+
+				return dispatcher
+			},
+			input: application.CreateCreditCardTransctionInput{
+				HolderName:   "John Doe",
+				CardNumber:   "5130731304267489",
+				CVV:          "456",
+				ExpireDate:   *pkg.TimeFromCanonical("2025-05-01 00:00:00"),
+				Amount:       1250,
+				Installments: 2,
+				Description:  "usb cable",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{
+				ID:            1,
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+				CardNumber:    "513073XXXXXX7489",
+				Amount: domain.Amount{
+					Value: 1250,
+				},
+				Installments: 2,
+				Description:  "usb cable",
+				TransactionStatus: []domain.TransactionStatus{
+					{
+						ID:                     10,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					},
+					{
+						ID:                     11,
+						CreditCardTransctionID: 1,
+						Status:                 domain.TRANSACTION_STATUS_AUTHORIZED,
+						CreatedAt:              pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+					},
+				},
+				CreatedAt: pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+			},
+			errExpected: nil,
 		},
 	}
 

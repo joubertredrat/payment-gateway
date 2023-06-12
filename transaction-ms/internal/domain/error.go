@@ -9,6 +9,7 @@ import (
 var (
 	ErrCreditCardTransactionRepositoryHouston = errors.New("Houston, we have unknown error into credit card transaction repository")
 	ErrTransactionStatusRepositoryHouston     = errors.New("Houston, we have unknown error into transaction status repository")
+	ErrAuthorizationServiceHouston            = errors.New("Houston, we have unknown error into authorization service")
 )
 
 type ErrInvalidCreditCardNumber struct {

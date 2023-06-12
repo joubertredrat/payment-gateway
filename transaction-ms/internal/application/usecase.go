@@ -37,7 +37,7 @@ func (u UsecaseCreateCreditCardTransction) Execute(input CreateCreditCardTransct
 	authorizationRequest, err := CreateAuthorizationRequestFromInput(input)
 	if err != nil {
 		u.logger.Error(err)
-		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
+		return domain.CreditCardTransaction{}, err
 	}
 
 	transactionCreated, err := u.creditCardTransactionRepository.Create(transaction)
@@ -55,8 +55,8 @@ func (u UsecaseCreateCreditCardTransction) Execute(input CreateCreditCardTransct
 
 	authorizationResponse, err := u.authorizationService.Handle(authorizationRequest)
 	if err != nil {
-		// status error
 		u.logger.Error(err)
+		u.appendErrorStatus(transactionCreated, domain.TRANSACTION_STATUS_ERROR_AUTHORIZATION)
 		return domain.CreditCardTransaction{}, ErrUsecaseCreateCreditCardTransctionHouston
 	}
 
@@ -80,4 +80,11 @@ func (u UsecaseCreateCreditCardTransction) appendStatus(t domain.CreditCardTrans
 	}
 
 	return u.transactionStatusRepository.Create(statusCreated)
+}
+
+func (u UsecaseCreateCreditCardTransction) appendErrorStatus(t domain.CreditCardTransaction, status string) {
+	_, err := u.appendStatus(t, status)
+	if err != nil {
+		u.logger.Error(err)
+	}
 }
