@@ -48,6 +48,20 @@ func (mr *MockDispatcherMockRecorder) CreditCardTransactionCreated(arg0 interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionCreated", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionCreated), arg0)
 }
 
+// CreditCardTransactionDeleted mocks base method.
+func (m *MockDispatcher) CreditCardTransactionDeleted(TransactionID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreditCardTransactionDeleted", TransactionID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreditCardTransactionDeleted indicates an expected call of CreditCardTransactionDeleted.
+func (mr *MockDispatcherMockRecorder) CreditCardTransactionDeleted(TransactionID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionDeleted", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionDeleted), TransactionID)
+}
+
 // CreditCardTransactionEdited mocks base method.
 func (m *MockDispatcher) CreditCardTransactionEdited(arg0 domain.CreditCardTransaction) error {
 	m.ctrl.T.Helper()
@@ -60,4 +74,18 @@ func (m *MockDispatcher) CreditCardTransactionEdited(arg0 domain.CreditCardTrans
 func (mr *MockDispatcherMockRecorder) CreditCardTransactionEdited(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionEdited", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionEdited), arg0)
+}
+
+// CreditCardTransactionGot mocks base method.
+func (m *MockDispatcher) CreditCardTransactionGot(arg0 domain.CreditCardTransaction) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreditCardTransactionGot", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreditCardTransactionGot indicates an expected call of CreditCardTransactionGot.
+func (mr *MockDispatcherMockRecorder) CreditCardTransactionGot(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreditCardTransactionGot", reflect.TypeOf((*MockDispatcher)(nil).CreditCardTransactionGot), arg0)
 }

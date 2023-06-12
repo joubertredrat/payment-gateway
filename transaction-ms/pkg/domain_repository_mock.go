@@ -49,6 +49,20 @@ func (mr *MockCreditCardTransactionRepositoryMockRecorder) Create(c interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCreditCardTransactionRepository)(nil).Create), c)
 }
 
+// DeleteByTransactionID mocks base method.
+func (m *MockCreditCardTransactionRepository) DeleteByTransactionID(TransactionID string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteByTransactionID", TransactionID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteByTransactionID indicates an expected call of DeleteByTransactionID.
+func (mr *MockCreditCardTransactionRepositoryMockRecorder) DeleteByTransactionID(TransactionID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByTransactionID", reflect.TypeOf((*MockCreditCardTransactionRepository)(nil).DeleteByTransactionID), TransactionID)
+}
+
 // GetByTransactionID mocks base method.
 func (m *MockCreditCardTransactionRepository) GetByTransactionID(TransactionID string) (domain.CreditCardTransaction, error) {
 	m.ctrl.T.Helper()

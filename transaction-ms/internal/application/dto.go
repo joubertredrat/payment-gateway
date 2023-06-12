@@ -16,3 +16,11 @@ type EditCreditCardTransactionInput struct {
 	TransactionID string
 	Description   string
 }
+
+type DeleteCreditCardTransactionInput struct {
+	TransactionID string
+}
+
+type GetCreditCardTransactionInput struct {
+	TransactionID string
+}

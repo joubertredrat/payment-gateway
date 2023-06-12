@@ -140,3 +140,83 @@ func (u UsecaseEditCreditCardTransaction) Execute(input EditCreditCardTransactio
 	}
 	return transactionEdited, nil
 }
+
+type UsecaseDeleteCreditCardTransaction struct {
+	logger                          Logger
+	creditCardTransactionRepository domain.CreditCardTransactionRepository
+	dispatcher                      Dispatcher
+}
+
+func NewUsecaseDeleteCreditCardTransaction(
+	logger Logger,
+	creditCardTransactionRepository domain.CreditCardTransactionRepository,
+	dispatcher Dispatcher,
+) UsecaseDeleteCreditCardTransaction {
+	return UsecaseDeleteCreditCardTransaction{
+		logger:                          logger,
+		creditCardTransactionRepository: creditCardTransactionRepository,
+		dispatcher:                      dispatcher,
+	}
+}
+
+func (u UsecaseDeleteCreditCardTransaction) Execute(input DeleteCreditCardTransactionInput) error {
+	err := u.creditCardTransactionRepository.DeleteByTransactionID(input.TransactionID)
+	if err != nil {
+		u.logger.Error(err)
+		if _, ok := err.(domain.ErrCreditCardTransactionNotFound); ok {
+			return err
+		}
+
+		return ErrUsecaseDeleteCreditCardTransactionHouston
+	}
+
+	if err := u.dispatcher.CreditCardTransactionDeleted(input.TransactionID); err != nil {
+		u.logger.Error(err)
+	}
+	return nil
+}
+
+type UsecaseGetCreditCardTransaction struct {
+	logger                          Logger
+	creditCardTransactionRepository domain.CreditCardTransactionRepository
+	transactionStatusRepository     domain.TransactionStatusRepository
+	dispatcher                      Dispatcher
+}
+
+func NewUsecaseGetCreditCardTransaction(
+	logger Logger,
+	creditCardTransactionRepository domain.CreditCardTransactionRepository,
+	transactionStatusRepository domain.TransactionStatusRepository,
+	dispatcher Dispatcher,
+) UsecaseGetCreditCardTransaction {
+	return UsecaseGetCreditCardTransaction{
+		logger:                          logger,
+		creditCardTransactionRepository: creditCardTransactionRepository,
+		transactionStatusRepository:     transactionStatusRepository,
+		dispatcher:                      dispatcher,
+	}
+}
+
+func (u UsecaseGetCreditCardTransaction) Execute(input GetCreditCardTransactionInput) (domain.CreditCardTransaction, error) {
+	transactionFound, err := u.creditCardTransactionRepository.GetByTransactionID(input.TransactionID)
+	if err != nil {
+		u.logger.Error(err)
+		if _, ok := err.(domain.ErrCreditCardTransactionNotFound); ok {
+			return domain.CreditCardTransaction{}, err
+		}
+
+		return domain.CreditCardTransaction{}, ErrUsecaseGetCreditCardTransactionHouston
+	}
+
+	status, err := u.transactionStatusRepository.GetByCreditCardTransactionID(transactionFound.TransactionID)
+	if err != nil {
+		u.logger.Error(err)
+		return domain.CreditCardTransaction{}, ErrUsecaseGetCreditCardTransactionHouston
+	}
+	transactionFound.TransactionStatus = status
+
+	if err := u.dispatcher.CreditCardTransactionGot(transactionFound); err != nil {
+		u.logger.Error(err)
+	}
+	return transactionFound, nil
+}

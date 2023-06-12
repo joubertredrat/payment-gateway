@@ -8,6 +8,7 @@ type PaginationCriteria struct {
 type CreditCardTransactionRepository interface {
 	Create(c CreditCardTransaction) (CreditCardTransaction, error)
 	Update(c CreditCardTransaction) (CreditCardTransaction, error)
+	DeleteByTransactionID(TransactionID string) error
 	GetByTransactionID(TransactionID string) (CreditCardTransaction, error)
 	GetList(p PaginationCriteria) ([]CreditCardTransaction, error)
 }

@@ -37,6 +37,7 @@ type CreditCardTransaction struct {
 	TransactionStatus []TransactionStatus
 	CreatedAt         *time.Time
 	UpdatedAt         *time.Time
+	DeletedAt         *time.Time
 }
 
 func NewCreditCardTransaction(

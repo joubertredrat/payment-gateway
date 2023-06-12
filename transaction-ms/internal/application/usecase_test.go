@@ -23,7 +23,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 		errExpected                               error
 	}{
 		{
-			name: "test usecase create credit card Transaction with valid data",
+			name: "test usecase create credit card transaction with valid data",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				return pkg.NewMockLogger(ctrl)
 			},
@@ -134,7 +134,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected: nil,
 		},
 		{
-			name: "test usecase create credit card Transaction with invalid credit card number",
+			name: "test usecase create credit card transaction with invalid credit card number",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -165,7 +165,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   domain.NewErrInvalidCreditCardNumber("513073130426"),
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error from credit card transaction repository",
+			name: "test usecase create credit card transaction with houston error from credit card transaction repository",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -203,7 +203,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseCreateCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error from first create on transaction status repository",
+			name: "test usecase create credit card transaction with houston error from first create on transaction status repository",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -260,7 +260,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseCreateCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error from authorization service",
+			name: "test usecase create credit card transaction with houston error from authorization service",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -340,7 +340,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseCreateCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error from create error status on transaction status repository",
+			name: "test usecase create credit card transaction with houston error from create error status on transaction status repository",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(2)
@@ -415,7 +415,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseCreateCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error from second create on transaction status repository",
+			name: "test usecase create credit card transaction with houston error from second create on transaction status repository",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -492,7 +492,7 @@ func TestUsecaseCreateCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseCreateCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase create credit card Transaction with houston error on dispatch created transaction",
+			name: "test usecase create credit card transaction with houston error on dispatch created transaction",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -639,7 +639,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 		errExpected                               error
 	}{
 		{
-			name: "test usecase edit credit card Transaction with valid data",
+			name: "test usecase edit credit card transaction with valid data",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				return pkg.NewMockLogger(ctrl)
 			},
@@ -748,7 +748,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			errExpected: nil,
 		},
 		{
-			name: "test usecase edit credit card Transaction with not found Transaction",
+			name: "test usecase edit credit card transaction with not found transaction",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -778,7 +778,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			errExpected:                   domain.NewErrCreditCardTransactionNotFound("TransactionID", "01H2KDJMHCTVTN0YDY10S5SNWB"),
 		},
 		{
-			name: "test usecase edit credit card Transaction with houston error from credit card transaction repository on get transaction",
+			name: "test usecase edit credit card transaction with houston error from credit card transaction repository on get transaction",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -808,7 +808,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseEditCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase edit credit card Transaction with houston error from credit card transaction repository on update transaction",
+			name: "test usecase edit credit card transaction with houston error from credit card transaction repository on update transaction",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -855,7 +855,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseEditCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase edit credit card Transaction with houston error from transaction status repository on get status",
+			name: "test usecase edit credit card transaction with houston error from transaction status repository on get status",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -921,7 +921,7 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			errExpected:                   application.ErrUsecaseEditCreditCardTransactionHouston,
 		},
 		{
-			name: "test usecase edit credit card Transaction with houston error on dispatch created transaction",
+			name: "test usecase edit credit card transaction with houston error on dispatch edited transaction",
 			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
 				logger := pkg.NewMockLogger(ctrl)
 				logger.EXPECT().Error(gomock.Any()).Times(1)
@@ -1039,6 +1039,464 @@ func TestUsecaseEditCreditCardTransaction(t *testing.T) {
 			defer ctrl.Finish()
 
 			usecase := application.NewUsecaseEditCreditCardTransaction(
+				test.loggerDependency(ctrl),
+				test.creditCardTransactionRepositoryDependency(ctrl),
+				test.transactionStatusRepositoryDependency(ctrl),
+				test.dispatcher(ctrl),
+			)
+
+			creditCardTransactionGot, errGot := usecase.Execute(test.input)
+
+			assert.Equal(t, test.creditCardTransactionExpected, creditCardTransactionGot)
+			assert.Equal(t, test.errExpected, errGot)
+		})
+	}
+}
+
+func TestUsecaseDeleteCreditCardTransaction(t *testing.T) {
+	tests := []struct {
+		name                                      string
+		loggerDependency                          func(ctrl *gomock.Controller) application.Logger
+		creditCardTransactionRepositoryDependency func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository
+		dispatcher                                func(ctrl *gomock.Controller) application.Dispatcher
+		input                                     application.DeleteCreditCardTransactionInput
+		errExpected                               error
+	}{
+		{
+			name: "test usecase delete credit card transaction with valid data",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				return pkg.NewMockLogger(ctrl)
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					DeleteByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(nil).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				dispatcher := pkg.NewMockDispatcher(ctrl)
+				dispatcher.
+					EXPECT().
+					CreditCardTransactionDeleted(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(nil).
+					Times(1)
+
+				return dispatcher
+			},
+			input: application.DeleteCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			errExpected: nil,
+		},
+		{
+			name: "test usecase delete credit card transaction with not found transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					DeleteByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.NewErrCreditCardTransactionNotFound("TransactionID", "01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.DeleteCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			errExpected: domain.NewErrCreditCardTransactionNotFound("TransactionID", "01H2KDJMHCTVTN0YDY10S5SNWB"),
+		},
+		{
+			name: "test usecase delete credit card transaction with houston error from transaction status repository",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					DeleteByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.ErrCreditCardTransactionRepositoryHouston).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.DeleteCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			errExpected: application.ErrUsecaseDeleteCreditCardTransactionHouston,
+		},
+		{
+			name: "test usecase delete credit card transaction with error on dispatch deleted transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					DeleteByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(nil).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				dispatcher := pkg.NewMockDispatcher(ctrl)
+				dispatcher.
+					EXPECT().
+					CreditCardTransactionDeleted(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(application.ErrDispatcherHouston).
+					Times(1)
+
+				return dispatcher
+			},
+			input: application.DeleteCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			errExpected: nil,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			usecase := application.NewUsecaseDeleteCreditCardTransaction(
+				test.loggerDependency(ctrl),
+				test.creditCardTransactionRepositoryDependency(ctrl),
+				test.dispatcher(ctrl),
+			)
+
+			errGot := usecase.Execute(test.input)
+			assert.Equal(t, test.errExpected, errGot)
+		})
+	}
+}
+
+func TestUsecaseGetCreditCardTransaction(t *testing.T) {
+	tests := []struct {
+		name                                      string
+		loggerDependency                          func(ctrl *gomock.Controller) application.Logger
+		creditCardTransactionRepositoryDependency func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository
+		transactionStatusRepositoryDependency     func(ctrl *gomock.Controller) domain.TransactionStatusRepository
+		dispatcher                                func(ctrl *gomock.Controller) application.Dispatcher
+		input                                     application.GetCreditCardTransactionInput
+		creditCardTransactionExpected             domain.CreditCardTransaction
+		errExpected                               error
+	}{
+		{
+			name: "test usecase get credit card transaction with valid data",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				return pkg.NewMockLogger(ctrl)
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByCreditCardTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return([]domain.TransactionStatus{
+						{
+							ID:                      10,
+							CreditCardTransactionID: 1,
+							Status:                  domain.TRANSACTION_STATUS_CREATED,
+							CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+						},
+						{
+							ID:                      11,
+							CreditCardTransactionID: 1,
+							Status:                  domain.TRANSACTION_STATUS_AUTHORIZED,
+							CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+						},
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				dispatcher := pkg.NewMockDispatcher(ctrl)
+				dispatcher.
+					EXPECT().
+					CreditCardTransactionGot(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(nil).
+					Times(1)
+
+				return dispatcher
+			},
+			input: application.GetCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{
+				ID:            1,
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+				CardNumber:    "513073XXXXXX7489",
+				Amount: domain.Amount{
+					Value: 1250,
+				},
+				Installments: 2,
+				Description:  "usb cable",
+				TransactionStatus: []domain.TransactionStatus{
+					{
+						ID:                      10,
+						CreditCardTransactionID: 1,
+						Status:                  domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					},
+					{
+						ID:                      11,
+						CreditCardTransactionID: 1,
+						Status:                  domain.TRANSACTION_STATUS_AUTHORIZED,
+						CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+					},
+				},
+				CreatedAt: pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+			},
+			errExpected: nil,
+		},
+		{
+			name: "test usecase get credit card transaction with not found transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.CreditCardTransaction{}, domain.NewErrCreditCardTransactionNotFound("TransactionID", "01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				return pkg.NewMockTransactionStatusRepository(ctrl)
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.GetCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   domain.NewErrCreditCardTransactionNotFound("TransactionID", "01H2KDJMHCTVTN0YDY10S5SNWB"),
+		},
+		{
+			name: "test usecase get credit card transaction with houston error from credit card transaction repository on get transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.CreditCardTransaction{}, domain.ErrCreditCardTransactionRepositoryHouston).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				return pkg.NewMockTransactionStatusRepository(ctrl)
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.GetCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseGetCreditCardTransactionHouston,
+		},
+		{
+			name: "test usecase get credit card transaction with houston error from transaction status repository on get status",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByCreditCardTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return([]domain.TransactionStatus{}, domain.ErrTransactionStatusRepositoryHouston).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				return pkg.NewMockDispatcher(ctrl)
+			},
+			input: application.GetCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{},
+			errExpected:                   application.ErrUsecaseGetCreditCardTransactionHouston,
+		},
+		{
+			name: "test usecase get credit card transaction with houston error on dispatch edited transaction",
+			loggerDependency: func(ctrl *gomock.Controller) application.Logger {
+				logger := pkg.NewMockLogger(ctrl)
+				logger.EXPECT().Error(gomock.Any()).Times(1)
+				return logger
+			},
+			creditCardTransactionRepositoryDependency: func(ctrl *gomock.Controller) domain.CreditCardTransactionRepository {
+				repository := pkg.NewMockCreditCardTransactionRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return(domain.CreditCardTransaction{
+						ID:            1,
+						TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+						CardNumber:    "513073XXXXXX7489",
+						Amount: domain.Amount{
+							Value: 1250,
+						},
+						Installments:      2,
+						Description:       "usb cable",
+						TransactionStatus: []domain.TransactionStatus{},
+						CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			transactionStatusRepositoryDependency: func(ctrl *gomock.Controller) domain.TransactionStatusRepository {
+				repository := pkg.NewMockTransactionStatusRepository(ctrl)
+				repository.
+					EXPECT().
+					GetByCreditCardTransactionID(gomock.Eq("01H2KDJMHCTVTN0YDY10S5SNWB")).
+					Return([]domain.TransactionStatus{
+						{
+							ID:                      10,
+							CreditCardTransactionID: 1,
+							Status:                  domain.TRANSACTION_STATUS_CREATED,
+							CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+						},
+						{
+							ID:                      11,
+							CreditCardTransactionID: 1,
+							Status:                  domain.TRANSACTION_STATUS_AUTHORIZED,
+							CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+						},
+					}, nil).
+					Times(1)
+
+				return repository
+			},
+			dispatcher: func(ctrl *gomock.Controller) application.Dispatcher {
+				dispatcher := pkg.NewMockDispatcher(ctrl)
+				dispatcher.
+					EXPECT().
+					CreditCardTransactionGot(gomock.AssignableToTypeOf(domain.CreditCardTransaction{})).
+					Return(application.ErrDispatcherHouston).
+					Times(1)
+
+				return dispatcher
+			},
+			input: application.GetCreditCardTransactionInput{
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+			},
+			creditCardTransactionExpected: domain.CreditCardTransaction{
+				ID:            1,
+				TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+				CardNumber:    "513073XXXXXX7489",
+				Amount: domain.Amount{
+					Value: 1250,
+				},
+				Installments: 2,
+				Description:  "usb cable",
+				TransactionStatus: []domain.TransactionStatus{
+					{
+						ID:                      10,
+						CreditCardTransactionID: 1,
+						Status:                  domain.TRANSACTION_STATUS_CREATED,
+						CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:01:00"),
+					},
+					{
+						ID:                      11,
+						CreditCardTransactionID: 1,
+						Status:                  domain.TRANSACTION_STATUS_AUTHORIZED,
+						CreatedAt:               pkg.TimeFromCanonical("2023-06-10 17:02:00"),
+					},
+				},
+				CreatedAt: pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+			},
+			errExpected: nil,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			usecase := application.NewUsecaseGetCreditCardTransaction(
 				test.loggerDependency(ctrl),
 				test.creditCardTransactionRepositoryDependency(ctrl),
 				test.transactionStatusRepositoryDependency(ctrl),
