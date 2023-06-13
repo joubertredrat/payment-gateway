@@ -12,6 +12,39 @@ var (
 	ErrAuthorizationServiceHouston            = errors.New("Houston, we have unknown error into authorization service")
 )
 
+type ErrPaginationCriteriaPage struct {
+	page uint
+}
+
+func NewErrPaginationCriteriaPage(page uint) ErrPaginationCriteriaPage {
+	return ErrPaginationCriteriaPage{
+		page: page,
+	}
+}
+
+func (e ErrPaginationCriteriaPage) Error() string {
+	return fmt.Sprintf("Invalid pagination criteria page [ %d ]", e.page)
+}
+
+type ErrPaginationCriteriaItemsPerPage struct {
+	itemsPerPage uint
+}
+
+func NewErrPaginationCriteriaItemsPerPage(itemsPerPage uint) ErrPaginationCriteriaItemsPerPage {
+	return ErrPaginationCriteriaItemsPerPage{
+		itemsPerPage: itemsPerPage,
+	}
+}
+
+func (e ErrPaginationCriteriaItemsPerPage) Error() string {
+	return fmt.Sprintf(
+		"Invalid pagination criteria items per page, expected between [ %d ] and [ %d ], got [ %d ]",
+		ITEMS_PER_PAGE_MIN,
+		ITEMS_PER_PAGE_MAX,
+		e.itemsPerPage,
+	)
+}
+
 type ErrCreditCardTransactionNotFound struct {
 	criteria string
 	value    string

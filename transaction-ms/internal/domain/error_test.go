@@ -9,6 +9,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestErrPaginationCriteriaPage(t *testing.T) {
+	invalidPage := uint(0)
+	errExpected := fmt.Sprintf("Invalid pagination criteria page [ %d ]", invalidPage)
+	errGot := domain.NewErrPaginationCriteriaPage(invalidPage)
+
+	assert.Equal(t, errExpected, errGot.Error())
+}
+
+func TestErrPaginationCriteriaItemsPerPage(t *testing.T) {
+	invalidItemsPerPage := uint(125)
+	errExpected := fmt.Sprintf(
+		"Invalid pagination criteria items per page, expected between [ %d ] and [ %d ], got [ %d ]",
+		domain.ITEMS_PER_PAGE_MIN,
+		domain.ITEMS_PER_PAGE_MAX,
+		invalidItemsPerPage,
+	)
+	errGot := domain.NewErrPaginationCriteriaItemsPerPage(invalidItemsPerPage)
+
+	assert.Equal(t, errExpected, errGot.Error())
+}
+
 func TestErrCreditCardTransactionNotFound(t *testing.T) {
 	invalidCriteria := "TransactionID"
 	invalidValue := "01H2RFARETAMR3G3HTZCDPFZ16"

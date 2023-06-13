@@ -27,3 +27,12 @@ func SanitizeCreditCardNumber(c string) (string, error) {
 func TransactionID() string {
 	return ulid.Make().String()
 }
+
+func contains(v string, e []string) bool {
+	for _, s := range e {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}

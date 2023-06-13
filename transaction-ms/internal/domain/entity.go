@@ -166,12 +166,3 @@ func GetAuthorizationStatusAvailable() []string {
 func IsValidAuthorizationStatus(v string) bool {
 	return contains(v, GetAuthorizationStatusAvailable())
 }
-
-func contains(v string, e []string) bool {
-	for _, s := range e {
-		if v == s {
-			return true
-		}
-	}
-	return false
-}
