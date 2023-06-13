@@ -1,6 +1,8 @@
 package infra
 
 import (
+	"errors"
+	"fmt"
 	"joubertredrat/transaction-ms/internal/application"
 	"net/http"
 	"reflect"
@@ -23,7 +25,7 @@ func (c ApiBaseController) HandleStatus(ctx *gin.Context) {
 	t := time.Now()
 	ctx.JSON(http.StatusOK, gin.H{
 		"status": "ok",
-		"time":   GetDatetimeCanonical(&t),
+		"time":   DatetimeCanonical(&t),
 	})
 }
 
@@ -31,7 +33,7 @@ func (c ApiBaseController) HandleNotFound(ctx *gin.Context) {
 	t := time.Now()
 	ctx.JSON(http.StatusNotFound, gin.H{
 		"error": "404 page not found",
-		"time":  GetDatetimeCanonical(&t),
+		"time":  DatetimeCanonical(&t),
 	})
 }
 
@@ -43,24 +45,43 @@ func NewCreditTransactionsController() CreditTransactionsController {
 }
 
 func (c CreditTransactionsController) HandleList(usecase application.UsecaseListCreditCardTransaction) gin.HandlerFunc {
-	t := time.Now()
 	return func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":    "ok",
-			"time":      GetDatetimeCanonical(&t),
-			"operation": "list",
+		l, _ := usecase.Execute(application.ListCreditCardTransactionInput{
+			Page:         1,
+			ItemsPerPage: 10,
 		})
+		response := NewListResponse(1, 10, CreateCreditCardTransactionListResponseFromUsecase(l))
+		ctx.JSON(http.StatusOK, response)
 	}
 }
 
 func (c CreditTransactionsController) HandleCreate(usecase application.UsecaseCreateCreditCardTransaction) gin.HandlerFunc {
-	t := time.Now()
 	return func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":    "ok",
-			"time":      GetDatetimeCanonical(&t),
-			"operation": "create",
+		var request CreateCreditCardTransactionRequest
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			fmt.Println(err)
+			responseWithError(ctx, err)
+			return
+		}
+		expireDate, err := CardExpireTime(request.ExpireYear, request.ExpireMonth)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid credit card expire year or month",
+			})
+			return
+		}
+
+		t, _ := usecase.Execute(application.CreateCreditCardTransactionInput{
+			HolderName:   request.HolderName,
+			CardNumber:   request.CardNumber,
+			CVV:          request.CVV,
+			ExpireDate:   expireDate,
+			Amount:       request.Amount,
+			Installments: request.Installments,
+			Description:  request.Description,
 		})
+		response := CreateCreditCardTransactionResponseFromUsecase(t)
+		ctx.JSON(http.StatusCreated, response)
 	}
 }
 
@@ -69,7 +90,7 @@ func (c CreditTransactionsController) HandleGet(usecase application.UsecaseGetCr
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"status":    "ok",
-			"time":      GetDatetimeCanonical(&t),
+			"time":      DatetimeCanonical(&t),
 			"operation": "get",
 		})
 	}
@@ -80,7 +101,7 @@ func (c CreditTransactionsController) HandleEdit(usecase application.UsecaseEdit
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"status":    "ok",
-			"time":      GetDatetimeCanonical(&t),
+			"time":      DatetimeCanonical(&t),
 			"operation": "edit",
 		})
 	}
@@ -91,7 +112,7 @@ func (c CreditTransactionsController) HandleDelete(usecase application.UsecaseDe
 	return func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"status":    "ok",
-			"time":      GetDatetimeCanonical(&t),
+			"time":      DatetimeCanonical(&t),
 			"operation": "delete",
 		})
 	}
@@ -107,4 +128,29 @@ func RegisterCustomValidator() {
 			return name
 		})
 	}
+}
+
+func responseWithError(c *gin.Context, err error) {
+	var verr validator.ValidationErrors
+	if errors.As(err, &verr) {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": getValidatorErrors(verr)})
+		return
+	}
+
+	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+}
+
+func getValidatorErrors(verr validator.ValidationErrors) []RequestValidationError {
+	var errs []RequestValidationError
+
+	for _, f := range verr {
+		err := f.ActualTag()
+		if f.Param() != "" {
+			err = fmt.Sprintf("%s=%s", err, f.Param())
+		}
+
+		errs = append(errs, RequestValidationError{Field: f.Field(), Reason: err})
+	}
+
+	return errs
 }

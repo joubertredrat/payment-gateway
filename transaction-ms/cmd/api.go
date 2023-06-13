@@ -86,9 +86,17 @@ func getApiCommand() *cli.Command {
 				rt := ra.Group("/creditcard/transactions")
 				{
 					rt.GET("", creditTransactionsController.HandleList(usecaseListCreditCardTransaction))
-					rt.POST("", creditTransactionsController.HandleCreate(usecaseCreateCreditCardTransaction))
+					rt.POST(
+						"",
+						infra.JSONBodyMiddleware(),
+						creditTransactionsController.HandleCreate(usecaseCreateCreditCardTransaction),
+					)
 					rt.GET("/:transactionid", creditTransactionsController.HandleGet(usecaseGetCreditCardTransaction))
-					rt.PATCH("/:transactionid", creditTransactionsController.HandleEdit(usecaseEditCreditCardTransaction))
+					rt.PATCH(
+						"/:transactionid",
+						infra.JSONBodyMiddleware(),
+						creditTransactionsController.HandleEdit(usecaseEditCreditCardTransaction),
+					)
 					rt.DELETE("/:transactionid", creditTransactionsController.HandleDelete(usecaseDeleteCreditCardTransaction))
 				}
 			}

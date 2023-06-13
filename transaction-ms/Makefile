@@ -1,4 +1,5 @@
 tests:
+	go clean -testcache ./...
 	go test -v ./... -coverprofile coverage.out
 
 coverage-html: tests ;
