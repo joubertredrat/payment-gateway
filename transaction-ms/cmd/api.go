@@ -24,16 +24,73 @@ func getApiCommand() *cli.Command {
 				return err
 			}
 
-			statusController := infra.NewStatusController()
+			db, err := infra.GetDatabaseConnection(infra.GetMysqlDSN(
+				config.DatabaseHost,
+				config.DatabasePort,
+				config.DatabaseName,
+				config.DatabaseUser,
+				config.DatabasePassword,
+			))
+			if err != nil {
+				return err
+			}
 
-			r.NoRoute(func(c *gin.Context) {
-				c.JSON(404, gin.H{"error": "404 page not found"})
-			})
+			logrus := infra.GetLogrusStdout()
+			logger := infra.GetLoggerStdout(logrus)
+
+			authorizationService := infra.GetAuthorizationServiceMicroservice()
+			dispatcher := infra.GetQueueDispatcher()
+
+			creditCardTransactionRepository := infra.GetCreditCardTransactionRepository(logger, db)
+			transactionStatusRepository := infra.GetTransactionStatusRepository(logger, db)
+
+			usecaseCreateCreditCardTransaction := infra.GetUsecaseCreateCreditCardTransaction(
+				logger,
+				creditCardTransactionRepository,
+				transactionStatusRepository,
+				authorizationService,
+				dispatcher,
+			)
+			usecaseEditCreditCardTransaction := infra.GetUsecaseEditCreditCardTransaction(
+				logger,
+				creditCardTransactionRepository,
+				transactionStatusRepository,
+				dispatcher,
+			)
+			usecaseDeleteCreditCardTransaction := infra.GetUsecaseDeleteCreditCardTransaction(
+				logger,
+				creditCardTransactionRepository,
+				dispatcher,
+			)
+			usecaseGetCreditCardTransaction := infra.GetUsecaseGetCreditCardTransaction(
+				logger,
+				creditCardTransactionRepository,
+				transactionStatusRepository,
+				dispatcher,
+			)
+			usecaseListCreditCardTransaction := infra.GetUsecaseListCreditCardTransaction(
+				logger,
+				creditCardTransactionRepository,
+				dispatcher,
+			)
+
+			apiBaseController := infra.NewApiBaseController()
+			creditTransactionsController := infra.NewCreditTransactionsController()
+
+			r.NoRoute(apiBaseController.HandleNotFound)
 
 			ra := r.Group("/api")
 			infra.RegisterCustomValidator()
 			{
-				ra.GET("/status", statusController.HandleStatus)
+				ra.GET("/status", apiBaseController.HandleStatus)
+				rt := ra.Group("/creditcard/transactions")
+				{
+					rt.GET("", creditTransactionsController.HandleList(usecaseListCreditCardTransaction))
+					rt.POST("", creditTransactionsController.HandleCreate(usecaseCreateCreditCardTransaction))
+					rt.GET("/:transactionid", creditTransactionsController.HandleGet(usecaseGetCreditCardTransaction))
+					rt.PATCH("/:transactionid", creditTransactionsController.HandleEdit(usecaseEditCreditCardTransaction))
+					rt.DELETE("/:transactionid", creditTransactionsController.HandleDelete(usecaseDeleteCreditCardTransaction))
+				}
 			}
 
 			return r.Run(fmt.Sprintf("%s:%s", config.ApiHost, config.ApiPort))
