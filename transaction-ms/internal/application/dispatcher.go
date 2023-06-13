@@ -7,4 +7,5 @@ type Dispatcher interface {
 	CreditCardTransactionEdited(domain.CreditCardTransaction) error
 	CreditCardTransactionDeleted(TransactionID string) error
 	CreditCardTransactionGot(domain.CreditCardTransaction) error
+	CreditCardTransactionListed(domain.PaginationCriteria) error
 }

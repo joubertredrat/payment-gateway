@@ -54,8 +54,21 @@ func TestCreateAuthorizationRequestFromInput(t *testing.T) {
 		input.Amount,
 		input.Installments,
 	)
-
 	authorizationRequestGot, _ := application.CreateAuthorizationRequestFromInput(input)
 
 	assert.Equal(t, authorizationRequestExpected, authorizationRequestGot)
+}
+
+func TestCreatePaginationCriteriaFromInput(t *testing.T) {
+	input := application.ListCreditCardTransactionInput{
+		Page:         7,
+		ItemsPerPage: 50,
+	}
+	paginationCriteriaExpected, _ := domain.NewPaginationCriteria(
+		input.Page,
+		input.ItemsPerPage,
+	)
+	paginationCriteriaGot, _ := application.CreatePaginationCriteriaFromInput(input)
+
+	assert.Equal(t, paginationCriteriaExpected, paginationCriteriaGot)
 }

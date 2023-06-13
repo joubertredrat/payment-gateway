@@ -7,5 +7,6 @@ var (
 	ErrUsecaseEditCreditCardTransactionHouston   = errors.New("Houston, we have unknown error into edit credit card transaction use case")
 	ErrUsecaseDeleteCreditCardTransactionHouston = errors.New("Houston, we have unknown error into delete credit card transaction use case")
 	ErrUsecaseGetCreditCardTransactionHouston    = errors.New("Houston, we have unknown error into get credit card transaction use case")
+	ErrUsecaseListCreditCardTransactionHouston   = errors.New("Houston, we have unknown error into list credit card transaction use case")
 	ErrDispatcherHouston                         = errors.New("Houston, we have unknown error into dispatcher")
 )

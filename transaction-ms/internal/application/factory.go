@@ -25,3 +25,10 @@ func CreateAuthorizationRequestFromInput(input CreateCreditCardTransactionInput)
 		input.Installments,
 	)
 }
+
+func CreatePaginationCriteriaFromInput(input ListCreditCardTransactionInput) (domain.PaginationCriteria, error) {
+	return domain.NewPaginationCriteria(
+		input.Page,
+		input.ItemsPerPage,
+	)
+}

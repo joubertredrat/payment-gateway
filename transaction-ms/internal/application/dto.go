@@ -24,3 +24,8 @@ type DeleteCreditCardTransactionInput struct {
 type GetCreditCardTransactionInput struct {
 	TransactionID string
 }
+
+type ListCreditCardTransactionInput struct {
+	Page         uint
+	ItemsPerPage uint
+}

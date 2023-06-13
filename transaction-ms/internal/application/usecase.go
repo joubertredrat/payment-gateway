@@ -220,3 +220,40 @@ func (u UsecaseGetCreditCardTransaction) Execute(input GetCreditCardTransactionI
 	}
 	return transactionFound, nil
 }
+
+type UsecaseListCreditCardTransaction struct {
+	logger                          Logger
+	creditCardTransactionRepository domain.CreditCardTransactionRepository
+	dispatcher                      Dispatcher
+}
+
+func NewUsecaseListCreditCardTransaction(
+	logger Logger,
+	creditCardTransactionRepository domain.CreditCardTransactionRepository,
+	dispatcher Dispatcher,
+) UsecaseListCreditCardTransaction {
+	return UsecaseListCreditCardTransaction{
+		logger:                          logger,
+		creditCardTransactionRepository: creditCardTransactionRepository,
+		dispatcher:                      dispatcher,
+	}
+}
+
+func (u UsecaseListCreditCardTransaction) Execute(input ListCreditCardTransactionInput) ([]domain.CreditCardTransaction, error) {
+	paginationCriteria, err := CreatePaginationCriteriaFromInput(input)
+	if err != nil {
+		u.logger.Error(err)
+		return []domain.CreditCardTransaction{}, err
+	}
+
+	creditCardTransactions, err := u.creditCardTransactionRepository.GetList(paginationCriteria)
+	if err != nil {
+		u.logger.Error(err)
+		return []domain.CreditCardTransaction{}, ErrUsecaseListCreditCardTransactionHouston
+	}
+
+	if err := u.dispatcher.CreditCardTransactionListed(paginationCriteria); err != nil {
+		u.logger.Error(err)
+	}
+	return creditCardTransactions, nil
+}
