@@ -86,35 +86,66 @@ func (c CreditTransactionsController) HandleCreate(usecase application.UsecaseCr
 }
 
 func (c CreditTransactionsController) HandleGet(usecase application.UsecaseGetCreditCardTransaction) gin.HandlerFunc {
-	t := time.Now()
 	return func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":    "ok",
-			"time":      DatetimeCanonical(&t),
-			"operation": "get",
+		transactionID := ctx.Param("transactionid")
+		if transactionID == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "transaction id required",
+			})
+			return
+		}
+
+		t, _ := usecase.Execute(application.GetCreditCardTransactionInput{
+			TransactionID: transactionID,
 		})
+
+		response := CreateCreditCardTransactionResponseFromUsecase(t)
+		ctx.JSON(http.StatusOK, response)
 	}
 }
 
 func (c CreditTransactionsController) HandleEdit(usecase application.UsecaseEditCreditCardTransaction) gin.HandlerFunc {
-	t := time.Now()
 	return func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":    "ok",
-			"time":      DatetimeCanonical(&t),
-			"operation": "edit",
+		transactionID := ctx.Param("transactionid")
+		if transactionID == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "transaction id required",
+			})
+			return
+		}
+
+		var request EditCreditCardTransactionRequest
+		if err := ctx.ShouldBindJSON(&request); err != nil {
+			fmt.Println(err)
+			responseWithError(ctx, err)
+			return
+		}
+
+		t, _ := usecase.Execute(application.EditCreditCardTransactionInput{
+			TransactionID: transactionID,
+			Description:   request.Description,
 		})
+
+		response := CreateCreditCardTransactionResponseFromUsecase(t)
+		ctx.JSON(http.StatusOK, response)
 	}
 }
 
 func (c CreditTransactionsController) HandleDelete(usecase application.UsecaseDeleteCreditCardTransaction) gin.HandlerFunc {
-	t := time.Now()
 	return func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"status":    "ok",
-			"time":      DatetimeCanonical(&t),
-			"operation": "delete",
+		transactionID := ctx.Param("transactionid")
+		if transactionID == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "transaction id required",
+			})
+			return
+		}
+
+		usecase.Execute(application.DeleteCreditCardTransactionInput{
+			TransactionID: transactionID,
 		})
+
+		ctx.JSON(http.StatusNoContent, gin.H{})
 	}
 }
 

@@ -35,7 +35,18 @@ func (r CreditCardTransactionRepositoryMysql) Create(c domain.CreditCardTransact
 }
 
 func (r CreditCardTransactionRepositoryMysql) Update(c domain.CreditCardTransaction) (domain.CreditCardTransaction, error) {
-	return domain.CreditCardTransaction{}, nil
+	return domain.CreditCardTransaction{
+		ID:            1,
+		TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+		CardNumber:    "513073XXXXXX7489",
+		Amount: domain.Amount{
+			Value: 1250,
+		},
+		Installments:      2,
+		Description:       "usb cable",
+		TransactionStatus: []domain.TransactionStatus{},
+		CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+	}, nil
 }
 
 func (r CreditCardTransactionRepositoryMysql) DeleteByTransactionID(TransactionID string) error {
@@ -43,7 +54,18 @@ func (r CreditCardTransactionRepositoryMysql) DeleteByTransactionID(TransactionI
 }
 
 func (r CreditCardTransactionRepositoryMysql) GetByTransactionID(TransactionID string) (domain.CreditCardTransaction, error) {
-	return domain.CreditCardTransaction{}, nil
+	return domain.CreditCardTransaction{
+		ID:            1,
+		TransactionID: "01H2KDJMHCTVTN0YDY10S5SNWB",
+		CardNumber:    "513073XXXXXX7489",
+		Amount: domain.Amount{
+			Value: 1250,
+		},
+		Installments:      2,
+		Description:       "usb cable",
+		TransactionStatus: []domain.TransactionStatus{},
+		CreatedAt:         pkg.TimeFromCanonical("2023-06-10 17:00:00"),
+	}, nil
 }
 
 func (r CreditCardTransactionRepositoryMysql) GetList(p domain.PaginationCriteria) ([]domain.CreditCardTransaction, error) {
