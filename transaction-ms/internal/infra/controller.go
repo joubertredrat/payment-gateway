@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"joubertredrat/transaction-ms/internal/application"
+	"joubertredrat/transaction-ms/internal/domain"
 	"net/http"
 	"reflect"
 	"strings"
@@ -32,7 +33,7 @@ func (c ApiBaseController) HandleStatus(ctx *gin.Context) {
 func (c ApiBaseController) HandleNotFound(ctx *gin.Context) {
 	t := time.Now()
 	ctx.JSON(http.StatusNotFound, gin.H{
-		"error": "404 page not found",
+		"error": "page not found",
 		"time":  DatetimeCanonical(&t),
 	})
 }
@@ -95,9 +96,24 @@ func (c CreditTransactionsController) HandleGet(usecase application.UsecaseGetCr
 			return
 		}
 
-		t, _ := usecase.Execute(application.GetCreditCardTransactionInput{
+		t, err := usecase.Execute(application.GetCreditCardTransactionInput{
 			TransactionID: transactionID,
 		})
+		if err != nil {
+			switch err.(type) {
+			case domain.ErrCreditCardTransactionNotFound:
+				ctx.JSON(http.StatusNotFound, gin.H{
+					"error": err.Error(),
+				})
+			default:
+				t := time.Now()
+				ctx.JSON(http.StatusInternalServerError, gin.H{
+					"error": "internal server error",
+					"time":  DatetimeCanonical(&t),
+				})
+			}
+			return
+		}
 
 		response := CreateCreditCardTransactionResponseFromUsecase(t)
 		ctx.JSON(http.StatusOK, response)

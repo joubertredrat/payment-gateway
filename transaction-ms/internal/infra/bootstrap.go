@@ -13,7 +13,7 @@ import (
 )
 
 func GetMysqlDSN(host, port, name, user, password string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", user, password, host, port, name)
+	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true", user, password, host, port, name)
 }
 
 func GetDatabaseConnection(dsn string) (*sql.DB, error) {
