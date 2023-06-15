@@ -11,7 +11,7 @@ class Authorization implements AuthorizationServer {
     call: ServerUnaryCall<CreditCardRequest, CreditCardResponse>,
     callback: sendUnaryData<CreditCardResponse>,
   ): void {
-    logger.info('authorize', Date.now());
+    logger.info('authorize', new Date().toLocaleString());
 
     const { cardNumber, cvv, expireDate } = call.request;
     const fake: FakeCheck = new FakeCheck();
