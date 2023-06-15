@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:10.6
+    environment:
+      MARIADB_ROOT_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
+      MARIADB_DATABASE: transactions_ms
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - credsystem_network
+    hostname: db.credsystem.local
+    ports:
+      - 13306:3306
+    healthcheck:
+      test: mysqladmin -p13152c0e-ce51-4e03-bebd-8e2c4fb359bf ping -h localhost
+      start_period: 5s
+      interval: 3s
+      timeout: 1s
+      retries: 20
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PMA_HOST: db.credsystem.local
+      PMA_USER: root
+      PMA_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
+    networks:
+      - credsystem_network
+    hostname: phpmyadmin.credsystem.local
+    ports:
+      - 13307:80
+    healthcheck:
+      test: ["CMD", "curl", "--connect-timeout", "1", "-s", "http://127.0.0.1"]
+      interval: 3s
+      timeout: 1s
+      retries: 20
+  redis:
+    image: redis:7.0-alpine
+    volumes:
+      - redis_data:/var/lib/redis
+    networks:
+      - credsystem_network
+    hostname: redis.credsystem.local
+    ports:
+      - 16379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 3s
+      timeout: 1s
+      retries: 20
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_HOSTS: redis.credsystem.local:redis.credsystem.local:6379
+    networks:
+      - credsystem_network
+    hostname: redis-commander.credsystem.local
+    ports:
+      - 16380:8081
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "127.0.0.1", "8081"]
+      interval: 3s
+      timeout: 1s
+      retries: 20
+
+volumes:
+  db_data:
+  redis_data:
+
+networks:
+  credsystem_network:
+    driver: bridge
