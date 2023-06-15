@@ -1,0 +1,34 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "tsconfigRootDir": ".",
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "sonarjs"],
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:sonarjs/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    "class-methods-use-this": "off",
+    "consistent-return": "off",
+    "max-len": "off",
+    "no-restricted-syntax": "off",
+    "object-curly-newline": "off",
+
+    "import/prefer-default-export": "off",
+    "import/order": ["error", { "groups": [["builtin", "external", "internal"]], "newlines-between": "always", "alphabetize": { "order": "asc", "caseInsensitive": true } }],
+
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+
+    "sonarjs/no-duplicate-string": "off"
+  }
+}
