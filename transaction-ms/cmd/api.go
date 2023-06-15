@@ -6,6 +6,7 @@ import (
 	"joubertredrat/transaction-ms/internal/infra/authorization"
 
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"github.com/urfave/cli/v2"
 	"google.golang.org/grpc"
 )
@@ -45,6 +46,10 @@ func getApiCommand() *cli.Command {
 				return err
 			}
 
+			redisClient := redis.NewClient(&redis.Options{
+				Addr: fmt.Sprintf("%s:%s", config.RedisQueueHost, config.RedisQueuePort),
+			})
+
 			logrus := infra.GetLogrusStdout()
 			logger := infra.GetLoggerStdout(logrus)
 
@@ -52,7 +57,7 @@ func getApiCommand() *cli.Command {
 				logger,
 				authorization.NewAuthorizationClient(grpcAuthorization),
 			)
-			dispatcher := infra.GetQueueDispatcher()
+			dispatcher := infra.GetQueueDispatcher(logger, redisClient, config.RedisQueueTransactionTopicName)
 
 			creditCardTransactionRepository := infra.GetCreditCardTransactionRepository(logger, db)
 			transactionStatusRepository := infra.GetTransactionStatusRepository(logger, db)

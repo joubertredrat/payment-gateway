@@ -10,6 +10,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 )
 
@@ -48,8 +49,12 @@ func GetTransactionStatusRepository(logger application.Logger, db *sql.DB) domai
 	return NewTransactionStatusRepositoryMysql(logger, db)
 }
 
-func GetQueueDispatcher() application.Dispatcher {
-	return NewQueueDispatcher()
+func GetQueueDispatcher(
+	l application.Logger,
+	r *redis.Client,
+	t string,
+) application.Dispatcher {
+	return NewQueueDispatcher(l, r, t)
 }
 
 func GetAuthorizationServiceMicroservice(
