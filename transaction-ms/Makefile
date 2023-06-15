@@ -13,3 +13,6 @@ generate-mocks:
 	mockgen -package=pkg -source=internal/domain/ports.go > pkg/domain_ports_mock.go
 	mockgen -package=pkg -source=internal/application/dispatcher.go > pkg/application_dispatcher_mock.go
 	mockgen -package=pkg -source=internal/application/logger.go > pkg/application_logger_mock.go
+
+generate-protos:
+	protoc --go-grpc_out=. --go_out=. --proto_path=../protos ../protos/authorization.proto

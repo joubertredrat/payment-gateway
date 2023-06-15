@@ -12,13 +12,15 @@ const (
 )
 
 type Config struct {
-	ApiHost          string `env:"API_HOST,required"`
-	ApiPort          string `env:"API_PORT,required"`
-	DatabaseHost     string `env:"DATABASE_HOST,required"`
-	DatabasePort     string `env:"DATABASE_PORT,required"`
-	DatabaseName     string `env:"DATABASE_NAME,required"`
-	DatabaseUser     string `env:"DATABASE_USER,required"`
-	DatabasePassword string `env:"DATABASE_PASSWORD,required"`
+	ApiHost             string `env:"API_HOST,required"`
+	ApiPort             string `env:"API_PORT,required"`
+	DatabaseHost        string `env:"DATABASE_HOST,required"`
+	DatabasePort        string `env:"DATABASE_PORT,required"`
+	DatabaseName        string `env:"DATABASE_NAME,required"`
+	DatabaseUser        string `env:"DATABASE_USER,required"`
+	DatabasePassword    string `env:"DATABASE_PASSWORD,required"`
+	AuthorizationMsHost string `env:"AUTHORIZATION_MS_HOST,required"`
+	AuthorizationMsPort string `env:"AUTHORIZATION_MS_PORT,required"`
 }
 
 func NewConfig() (Config, error) {

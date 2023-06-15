@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package service;
 
+option go_package = "internal/infra/authorization";
+
 service Authorization {
     rpc authorize(CreditCardRequest) returns (CreditCardResponse);
 }

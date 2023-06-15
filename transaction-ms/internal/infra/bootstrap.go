@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"joubertredrat/transaction-ms/internal/application"
 	"joubertredrat/transaction-ms/internal/domain"
+	"joubertredrat/transaction-ms/internal/infra/authorization"
 	"os"
 	"time"
 
@@ -51,8 +52,11 @@ func GetQueueDispatcher() application.Dispatcher {
 	return NewQueueDispatcher()
 }
 
-func GetAuthorizationServiceMicroservice() domain.AuthorizationService {
-	return NewAuthorizationServiceMicroservice()
+func GetAuthorizationServiceMicroservice(
+	l application.Logger,
+	s authorization.AuthorizationClient,
+) domain.AuthorizationService {
+	return NewAuthorizationServiceMicroservice(l, s)
 }
 
 func GetUsecaseCreateCreditCardTransaction(

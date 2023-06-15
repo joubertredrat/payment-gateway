@@ -3,9 +3,11 @@ package cmd
 import (
 	"fmt"
 	"joubertredrat/transaction-ms/internal/infra"
+	"joubertredrat/transaction-ms/internal/infra/authorization"
 
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli/v2"
+	"google.golang.org/grpc"
 )
 
 func getApiCommand() *cli.Command {
@@ -35,10 +37,21 @@ func getApiCommand() *cli.Command {
 				return err
 			}
 
+			grpcAuthorization, err := grpc.Dial(
+				fmt.Sprintf("%s:%s", config.AuthorizationMsHost, config.AuthorizationMsPort),
+				grpc.WithInsecure(),
+			)
+			if err != nil {
+				return err
+			}
+
 			logrus := infra.GetLogrusStdout()
 			logger := infra.GetLoggerStdout(logrus)
 
-			authorizationService := infra.GetAuthorizationServiceMicroservice()
+			authorizationService := infra.GetAuthorizationServiceMicroservice(
+				logger,
+				authorization.NewAuthorizationClient(grpcAuthorization),
+			)
 			dispatcher := infra.GetQueueDispatcher()
 
 			creditCardTransactionRepository := infra.GetCreditCardTransactionRepository(logger, db)
