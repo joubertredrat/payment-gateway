@@ -1,11 +1,52 @@
 version: "3.9"
 
 services:
+  transaction:
+    platform: linux/amd64
+    build:
+      context: transaction-ms/.
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      API_HOST: 0.0.0.0
+      API_PORT: 9007
+      DATABASE_HOST: db.credsystem.local
+      DATABASE_PORT: 3306
+      DATABASE_NAME: transaction_ms
+      DATABASE_USER: root
+      DATABASE_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
+      AUTHORIZATION_MS_HOST: 127.0.0.1
+      AUTHORIZATION_MS_PORT: 50051
+      REDIS_QUEUE_HOST: redis.credsystem.local
+      REDIS_QUEUE_PORT: 6379
+      REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
+    networks:
+      - credsystem_network
+    ports:
+      - 9007:9007
+  notification:
+    platform: linux/amd64
+    build:
+      context: notification-ms/.
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_QUEUE_HOST: redis.credsystem.local
+      REDIS_QUEUE_PORT: 6379
+      REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
+    networks:
+      - credsystem_network
   db:
     image: mariadb:10.6
     environment:
       MARIADB_ROOT_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
-      MARIADB_DATABASE: transactions_ms
+      MARIADB_DATABASE: transaction_ms
     volumes:
       - db_data:/var/lib/mysql
     networks:
