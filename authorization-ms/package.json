@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts .",
-    "build": "node bin/proto && rimraf dist && tsc -b",
+    "build": "rimraf dist && tsc -b",
+    "proto": "node bin/proto && rimraf dist && tsc -b",
     "start": "node dist/server",
     "health": "node dist/health"
   },

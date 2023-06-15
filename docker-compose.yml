@@ -19,15 +19,26 @@ services:
       DATABASE_NAME: transaction_ms
       DATABASE_USER: root
       DATABASE_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
-      AUTHORIZATION_MS_HOST: 127.0.0.1
+      AUTHORIZATION_MS_HOST: authorization.credsystem.local
       AUTHORIZATION_MS_PORT: 50051
       REDIS_QUEUE_HOST: redis.credsystem.local
       REDIS_QUEUE_PORT: 6379
       REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
     networks:
       - credsystem_network
+    hostname: transaction.credsystem.local
     ports:
       - 9007:9007
+  authorization:
+    platform: linux/amd64
+    build:
+      context: authorization-ms/.
+      dockerfile: Dockerfile
+    networks:
+      - credsystem_network
+    hostname: authorization.credsystem.local
+    ports:
+      - 50051:50051
   notification:
     platform: linux/amd64
     build:
@@ -42,6 +53,7 @@ services:
       REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
     networks:
       - credsystem_network
+    hostname: notification.credsystem.local
   db:
     image: mariadb:10.6
     environment:

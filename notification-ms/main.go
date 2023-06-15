@@ -24,7 +24,7 @@ func main() {
 
 	subscriber := redisClient.Subscribe(ctx, config.RedisQueueTransactionTopicName)
 	fmt.Printf(
-		"Subscribe to topic [ %s ] at [ %s ]\n",
+		"Subscribed to topic [ %s ] at [ %s ]\n",
 		config.RedisQueueTransactionTopicName,
 		redisHost,
 	)
