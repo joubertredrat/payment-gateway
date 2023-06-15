@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package service;
+
+service Authorization {
+    rpc authorize(CreditCardRequest) returns (CreditCardResponse);
+}
+
+message CreditCardRequest {
+    string holder_name = 1;
+    string card_number = 2;
+    string cvv = 3;
+    int64 expire_date = 4;
+    uint64 amount = 5;
+    uint32 installments = 6;
+}
+
+enum AuthorizationStatus {
+    AUTHORIZED = 0;
+    DECLINED_UNKNOWN = 1;
+    DECLINED_INVALID_DATA = 2;
+    DECLINED_EXPIRED_CARD = 3;
+    DECLINED_INSUFFICIENT_FUNDS = 4;
+    DECLINED_SUSPECT_FRAUD = 5;
+}
+
+message CreditCardResponse {
+    string card_number = 1;
+    AuthorizationStatus status = 2;
+    string message = 3;
+}
