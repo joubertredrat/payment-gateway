@@ -14,19 +14,19 @@ services:
     environment:
       API_HOST: 0.0.0.0
       API_PORT: 9007
-      DATABASE_HOST: db.credsystem.local
+      DATABASE_HOST: db.ms.local
       DATABASE_PORT: 3306
       DATABASE_NAME: transaction_ms
       DATABASE_USER: root
       DATABASE_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
-      AUTHORIZATION_MS_HOST: authorization.credsystem.local
+      AUTHORIZATION_MS_HOST: authorization.ms.local
       AUTHORIZATION_MS_PORT: 50051
-      REDIS_QUEUE_HOST: redis.credsystem.local
+      REDIS_QUEUE_HOST: redis.ms.local
       REDIS_QUEUE_PORT: 6379
       REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
     networks:
-      - credsystem_network
-    hostname: transaction.credsystem.local
+      - ms_network
+    hostname: transaction.ms.local
     ports:
       - 9007:9007
     healthcheck:
@@ -40,8 +40,8 @@ services:
       context: authorization-ms/.
       dockerfile: Dockerfile
     networks:
-      - credsystem_network
-    hostname: authorization.credsystem.local
+      - ms_network
+    hostname: authorization.ms.local
     ports:
       - 50051:50051
     healthcheck:
@@ -58,12 +58,12 @@ services:
       redis:
         condition: service_healthy
     environment:
-      REDIS_QUEUE_HOST: redis.credsystem.local
+      REDIS_QUEUE_HOST: redis.ms.local
       REDIS_QUEUE_PORT: 6379
       REDIS_QUEUE_TRANSACTION_TOPIC_NAME: transactions
     networks:
-      - credsystem_network
-    hostname: notification.credsystem.local
+      - ms_network
+    hostname: notification.ms.local
   db:
     image: mariadb:10.6
     environment:
@@ -72,8 +72,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - credsystem_network
-    hostname: db.credsystem.local
+      - ms_network
+    hostname: db.ms.local
     ports:
       - 13306:3306
     healthcheck:
@@ -88,12 +88,12 @@ services:
       db:
         condition: service_healthy
     environment:
-      PMA_HOST: db.credsystem.local
+      PMA_HOST: db.ms.local
       PMA_USER: root
       PMA_PASSWORD: 13152c0e-ce51-4e03-bebd-8e2c4fb359bf
     networks:
-      - credsystem_network
-    hostname: phpmyadmin.credsystem.local
+      - ms_network
+    hostname: phpmyadmin.ms.local
     ports:
       - 13307:80
     healthcheck:
@@ -106,8 +106,8 @@ services:
     volumes:
       - redis_data:/var/lib/redis
     networks:
-      - credsystem_network
-    hostname: redis.credsystem.local
+      - ms_network
+    hostname: redis.ms.local
     ports:
       - 16379:6379
     healthcheck:
@@ -121,10 +121,10 @@ services:
       redis:
         condition: service_healthy
     environment:
-      REDIS_HOSTS: redis.credsystem.local:redis.credsystem.local:6379
+      REDIS_HOSTS: redis.ms.local:redis.ms.local:6379
     networks:
-      - credsystem_network
-    hostname: redis-commander.credsystem.local
+      - ms_network
+    hostname: redis-commander.ms.local
     ports:
       - 16380:8081
     healthcheck:
@@ -138,5 +138,5 @@ volumes:
   redis_data:
 
 networks:
-  credsystem_network:
+  ms_network:
     driver: bridge

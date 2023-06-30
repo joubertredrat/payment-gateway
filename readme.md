@@ -1,20 +1,24 @@
-## Credsystem Dev Test
+## Payment Gateway Dev Test
 
-## Dependências
+## Dependencies
 
 * Docker
 * Docker compose
 
-## Execução
+## Technologies used
 
-* Clonar este repositório
-* Executar `docker compose up -d`
+[Golang](https://go.dev), [Typescript](https://www.typescriptlang.org), [gRPC](https://grpc.io/), [MariaDB](https://mariadb.org), [Redis](https://redis.io).
 
-Após execução, os seguintes serviços estarão disponíveis para acesso.
+## Execution
 
-Microserviço de Transactions = http://127.0.0.1:9007
+* Clone this repository
+* Execute `docker compose up -d`
 
-Microserviço de Autorização = tcp://127.0.0.1:50051
+After execution, the following services will be available for access.
+
+Transactions microservice = http://127.0.0.1:9007
+
+Authorization microservice = tcp://127.0.0.1:50051
 
 MariaDB = root:13152c0e-ce51-4e03-bebd-8e2c4fb359bf@127.0.0.1:13306
 
@@ -24,21 +28,19 @@ PHPMyAdmin = http://127.0.0.1:13307
 
 Redis Commander = http://127.0.0.1:16380
 
-Para visualizar os serviços em execução, utilizar o comando `docker compose ps`.
+To view running services, just execute the command `docker compose ps`.
 
-Para visualizar os logs dos microserviços em execução, utilizar o comando `docker compose logs -f ctransaction cauthorization cnotification`.
+To view logs of running microservices, just execute the command `docker compose logs -f ctransaction cauthorization cnotification`.
 
-### Sobre o projeto
+### About the project
 
-O projeto foi feito usando alguns conceitos de Domain-Driven Design, como a aplicação de camadas, contexto delimitado (bounded context) e repository pattern.
+The project was made using some concepts about Domain Driven Design, like layered application, bounded context and repository pattern.
 
-A camada de domínio tem 100% de cobertura de testes, sendo todos eles unitários, justamente para cobrir todos os casos de sucesso e erros possíveis. O coverage pode ser consultado no comando `make coverage-docker` quando o projeto estiver em execução, essa possiblidade foi por conta da implementação do DIP "Dependency Inversion Principle", representado pela letra D no SOLID.
+The domain layer have more than 95% of corevage, all unit tests, just to cover all cases success and mapped errors as a possible. This was possible by the implementation of DIP "Dependency Inversion Principle", represented by letter D in SOLID.
 
-Não vi necessidade de implementação de testes na camada de infra, pois neste ponto é melhor a implementação de testes de integração em alguns casos e isto estaria muito fora do escopo.
+The domain layer is agnostic for the source data, was possible to create a command for API listen HTTP, but, the domain layer can receive data from any source, like event driven for example.
 
-Como a camada de domínio é agnóstica a origem de entrada de dados, foi possível fazer um comando para o listen de api HTTP, porém, a camada de domínio pode receber dados de qualquer fonte, como um evento por exemplo.
+Another interesting point is the entities of domain isn't related to a database modeling and was proposital, as a way to show this separation, that allows improvements, fixes or new implementations, in the domain layer side or in other layer side, like in this case that was in infra.
 
-Um outro ponto interessante é ver que as entidades do domínio não estão presos a modelagem de banco de dados, sendo que o schema implementado foi proposital como forma de mostrar esta separação, o que permite melhorias, correções ou novas implementações, tanto do lado do domínio, quanto do lado da infra, nesse caso, a estrutura de dados.
-
-Já a camada de infra contém todo o código necessário para a sustentação da camada de domínio, como o código que de fato faz a interação com o banco de dados, controllers da api, integração com outros microserviços via grpc ou disparo de eventos com conceitos de pubsub. Alguns design patterns foram utilizados para tornar mais dinâmica a operação, como abstract factory para criação das entidades de domínio a partir dos dados de request ou o contrário, criação das entidades de response a partir das entidades de domínio.
+The infra layer contains all necessary code to sustain the domain layer, as the code that interact the external database, api controllers, integration with other microservices by gprc or event dispatch with pubsub concepts. Some design patterns were used to be more dynamic the operation, like abstract factory for creation of domain entities from the request data or the opposite, creation of response entities from the domain entities.
 
