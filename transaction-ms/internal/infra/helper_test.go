@@ -67,7 +67,7 @@ func TestCardExpireTime(t *testing.T) {
 				Layout:     "2006-01-02",
 				Value:      "2k29-05-01",
 				LayoutElem: "2006",
-				ValueElem:  "-05-01",
+				ValueElem:  "2k29-05-01",
 				Message:    "",
 			},
 		},
