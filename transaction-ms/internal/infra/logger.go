@@ -15,3 +15,7 @@ func NewLoggerStdout(logger *logrus.Logger) LoggerStdout {
 func (l LoggerStdout) Error(err error) {
 	l.logger.Error(err)
 }
+
+func (l LoggerStdout) Info(msg string, args ...any) {
+	l.logger.Info(msg, args)
+}

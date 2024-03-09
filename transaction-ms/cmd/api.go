@@ -1,9 +1,16 @@
 package cmd
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"joubertredrat/transaction-ms/internal/infra"
 	"joubertredrat/transaction-ms/internal/infra/authorization"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -119,7 +126,41 @@ func getApiCommand() *cli.Command {
 				}
 			}
 
-			return r.Run(fmt.Sprintf("%s:%s", config.ApiHost, config.ApiPort))
+			server := &http.Server{
+				Addr:    fmt.Sprintf("%s:%s", config.ApiHost, config.ApiPort),
+				Handler: r,
+			}
+
+			go func() {
+				if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+					logger.Error(err)
+				}
+			}()
+
+			done := make(chan os.Signal)
+			signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
+			<-done
+
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			if err := server.Shutdown(ctx); err != nil {
+				return err
+			}
+
+			if err := grpcAuthorization.Close(); err != nil {
+				logger.Error(err)
+			}
+
+			if err := redisClient.Close(); err != nil {
+				logger.Error(err)
+			}
+
+			if err := db.Close(); err != nil {
+				logger.Error(err)
+			}
+
+			logger.Info("Finishing api listener")
+			return nil
 		},
 	}
 }
