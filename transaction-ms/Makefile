@@ -16,3 +16,6 @@ generate-mocks:
 
 generate-protos:
 	protoc --go-grpc_out=. --go_out=. --proto_path=../protos ../protos/authorization.proto
+
+vulncheck:
+	go run golang.org/x/vuln/cmd/govulncheck@latest --test ./...

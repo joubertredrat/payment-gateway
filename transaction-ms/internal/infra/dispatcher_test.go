@@ -23,20 +23,20 @@ const (
 	TOPIC_NAME      = "transactions_test"
 )
 
-type RedisIntegrationTestSuite struct {
+type DispatcherIntegrationTestSuite struct {
 	suite.Suite
 	ctx           context.Context
-	testContainer TestContainer
+	testContainer DispatcherTestContainer
 	redisClient   *redisClient.Client
 	logger        application.Logger
 	ctrl          *gomock.Controller
 }
 
-func TestRedisIntegrationTestSuite(t *testing.T) {
-	suite.Run(t, new(RedisIntegrationTestSuite))
+func TestDispatcherIntegrationTestSuite(t *testing.T) {
+	suite.Run(t, new(DispatcherIntegrationTestSuite))
 }
 
-func (s *RedisIntegrationTestSuite) SetupSuite() {
+func (s *DispatcherIntegrationTestSuite) SetupSuite() {
 	s.ctx = context.Background()
 	s.testContainer = setupRedis(s.ctx, s.T())
 	opts, err := redisClient.ParseURL(s.testContainer.URI)
@@ -46,14 +46,14 @@ func (s *RedisIntegrationTestSuite) SetupSuite() {
 	s.logger = pkg.NewMockLogger(s.ctrl)
 }
 
-func (s *RedisIntegrationTestSuite) TearDownSuite() {
+func (s *DispatcherIntegrationTestSuite) TearDownSuite() {
 	s.ctrl.Finish()
 	if err := s.testContainer.Terminate(s.ctx); err != nil {
 		s.T().Errorf("Error on terminate test container: %s", err)
 	}
 }
 
-func (s *RedisIntegrationTestSuite) TestQueueDispatcher() {
+func (s *DispatcherIntegrationTestSuite) TestQueueDispatcher() {
 	dispatcher := infra.NewQueueDispatcher(s.logger, s.redisClient, TOPIC_NAME)
 
 	assert.Nil(s.T(), dispatcher.CreditCardTransactionCreated(domain.CreditCardTransaction{
@@ -76,12 +76,12 @@ func (s *RedisIntegrationTestSuite) TestQueueDispatcher() {
 	}))
 }
 
-type TestContainer struct {
+type DispatcherTestContainer struct {
 	testcontainers.Container
 	URI string
 }
 
-func setupRedis(ctx context.Context, t testing.TB) TestContainer {
+func setupRedis(ctx context.Context, t testing.TB) DispatcherTestContainer {
 	redisContainer, err := redis.RunContainer(
 		ctx,
 		testcontainers.WithImage(CONTAINER_IMAGE),
@@ -96,7 +96,7 @@ func setupRedis(ctx context.Context, t testing.TB) TestContainer {
 		t.Errorf("Error on get test container uri: %s", err)
 	}
 
-	return TestContainer{
+	return DispatcherTestContainer{
 		Container: redisContainer,
 		URI:       URI,
 	}
